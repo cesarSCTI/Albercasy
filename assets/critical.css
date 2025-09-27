@@ -1,0 +1,108 @@
+/* ====== RESET + BOX-SIZING ====== */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+/* ====== HTML / BODY ====== */
+html { line-height: 1.15; -webkit-text-size-adjust:100%; }
+body {
+  margin: 0;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,Arial,sans-serif;
+  color: #111;
+  background-color: #fff;
+  overflow-x: hidden;
+}
+
+/* ====== TIPOGRAFÍA BASE ====== */
+h1,h2,h3,h4,h5,h6 { margin: 0 0 .5rem; font-weight: 600; line-height: 1.2; }
+p { margin: 0 0 1rem; }
+b,strong { font-weight: 700; }
+a { color: #d7bd60; text-decoration: none; }
+a:hover { text-decoration: underline; }
+img { max-width: 100%; height: auto; border-style: none; vertical-align: middle; }
+
+/* ====== CONTENEDOR + GRID MÍNIMO (solo lo necesario para el pliegue) ====== */
+.container { width:100%; margin:0 auto; padding: 0 12px; }
+@media (min-width: 576px){ .container{ max-width: 540px; } }
+@media (min-width: 768px){ .container{ max-width: 720px; } }
+@media (min-width:1024px){ .container{ max-width: 960px; } }
+@media (min-width:1200px){ .container{ max-width:1140px; } }
+
+.row { display:flex; flex-wrap:wrap; margin-right:-12px; margin-left:-12px; }
+.col-6 { flex:0 0 50%; max-width:50%; padding:0 12px; }
+.col-12 { flex:0 0 100%; max-width:100%; padding:0 12px; }
+
+/* ====== BOTONES (primarios/links que suelen aparecer en hero) ====== */
+.btn {
+  display:inline-block; padding:.6rem 1.1rem; font-weight:600; line-height:1.2;
+  border:1px solid transparent; border-radius:.25rem; cursor:pointer; text-align:center;
+}
+.btn:focus { outline: none; }
+.btn-primary { background:#d7bd60; border-color:#d7bd60; color:#111; }
+.btn-primary:hover { filter: brightness(.95); }
+.btn-outline { background:transparent; border-color:#d7bd60; color:#d7bd60; }
+.btn-outline:hover { background:#d7bd60; color:#111; }
+
+/* ====== CABECERA BÁSICA (logo + navegación + utilitarios) ====== */
+header, .tt-stuck-nav { background:#fff; color:#111; }
+.header-top { font-size:.9rem; background:#f7f7f7; color:#333; }
+.header-top a { color: inherit; text-decoration:none; }
+
+.tt-header-holder { position:relative; z-index:10; }
+.tt-logo img { display:block; height:auto; max-height:56px; }
+
+/* Navegación de escritorio simple (puede ajustarse a tu markup real) */
+.tt-desctop-menu { display:flex; align-items:center; gap: 20px; }
+.tt-desctop-menu a { color:#111; font-weight:500; }
+.tt-desctop-menu a:hover { color:#d7bd60; }
+
+/* ====== BUSCADOR EN HEADER (frecuente en Wokiee) ====== */
+.tt-search { position:relative; }
+.tt-search .tt-dropdown-menu { position:relative; }
+.tt-search .tt-dropdown-menu form {
+  display:flex; align-items:center; gap:8px; width:100%;
+}
+.tt-search .tt-search-input {
+  width: calc(80% - 40px);
+  min-height: 40px;
+  padding: 8px 12px;
+  border:1px solid #ddd; border-radius:4px;
+}
+.tt-search button[type="submit"] {
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid #d7bd60; border-radius:4px;
+  background:#d7bd60; color:#111; font-weight:600;
+}
+
+/* ====== BARRA PEGADA (si el tema fija la nav al hacer scroll) ====== */
+.tt-stuck-nav {
+  position: sticky; top: 0; left:0; right:0;
+  box-shadow: 0 2px 8px rgba(0,0,0,.05);
+}
+
+/* ====== HERO/MÁSTHEAD BÁSICO (primer bloque visible) ====== */
+.hero, .tt-promo-fullwidth, .banner--hero {
+  position:relative; display:flex; align-items:center; min-height: 48vh;
+  background-position:center; background-size:cover; background-repeat:no-repeat;
+}
+.hero .container, .tt-promo-fullwidth .container { padding-top:24px; padding-bottom:24px; }
+.hero h1 { font-size: clamp(28px, 4vw, 44px); margin-bottom: .5rem; }
+.hero p.lead { font-size: clamp(16px, 2vw, 20px); color:#444; margin-bottom: 1rem; }
+
+/* ====== PRECIO RÁPIDO (si aparece en primer viewport) ====== */
+span.money { color:#111; font-weight:700; }
+span.moneyCompare { color:#888; text-decoration: line-through; }
+
+/* ====== UTILIDADES QUE EVITAN SALTOS (CLS) ====== */
+[hidden]{ display:none !important; }
+img[loading="lazy"] { min-height:1px; } /* previene colapsos si no hay dims */
+.lazy-image { display:block; min-height: 1px; }
+.placeholder-rect { background:#f1f1f1; }
+
+/* ====== RESPONSIVE QUICK TWEAKS ====== */
+@media (max-width: 991px){
+  .tt-desctop-menu { display:none; } /* menú móvil toma control con JS/CSS diferidos */
+  .tt-logo img { max-height:48px; }
+  .hero, .tt-promo-fullwidth, .banner--hero { min-height: 40vh; }
+}
