@@ -35,11 +35,17 @@
 
   {%- if settings.use_countdown_timezone -%}<meta name="timezone" content="{{ settings.countdown_timezone }}">{%- endif -%}
   
-  <!-- Social meta ================================================== -->
   {%- include 'social-meta-tags' -%}
 
   {%- comment -%} === CRITICAL INLINE (no bloquear) === {%- endcomment -%}
 <style id="critical-css">
+  /* Aísla layouts del contenido principal y permite paint parcial */
+    #tt-pageContent{ 
+    contain: layout paint style;   /* soportado en Chrome */
+    content-visibility: auto;      /* las partes fuera de vista no recalculan */
+    contain-intrinsic-size: 1000px;/* tamaño “fantasma” hasta que se pinte */
+    }
+
   /* ====== RESET + BOX-SIZING ====== */
   *,
   *::before,
@@ -148,6 +154,21 @@
     .tt-logo img { max-height:48px; }
     .hero, .tt-promo-fullwidth, .banner--hero { min-height: 40vh; }
   }
+
+  /* Mantén altura/anchura de la “slot” de precio para que no salte */
+.boost-sd__product-price-content,
+.price, .tt-price { 
+  display: inline-block;
+  min-height: 1.4em;        /* reserva vertical */
+  min-width: 4.5ch;         /* reserva horizontal (ancho de “$ 0.00”) */
+}
+
+/* Ocultar sin colapsar el flujo */
+.boost-sd__format-currency.is-zero{
+  visibility: hidden;       /* mantiene el espacio → no hay CLS */
+  /* opcional: color:transparent; */
+}
+
 </style>
 
 {%- comment -%} === Google Fonts sin bloqueo === {%- endcomment -%}
@@ -199,6 +220,7 @@
 <link rel="stylesheet" href="{{ 'style-rtl.css' | asset_url }}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="{{ 'style-rtl.css' | asset_url }}"></noscript>
 {%- endif -%}
+
 <script src="{{ 'jquery.min.js' | asset_url }}" defer></script>
 
   <!-- Shopify injects (apps, storefront, etc.) -->
@@ -396,44 +418,23 @@
 
   <!-- ====== Script personalizado (convertido a Vanilla JS para no depender de jQuery) ====== -->
   <script defer>
-  (function(){
-    function hideZeroDollarElements(){
-      var elems = document.querySelectorAll(".boost-sd__format-currency");
-      elems.forEach(function(el){
-        var txt = (el.textContent || '').trim();
-        if (txt === "$ 0"){
-          el.style.display = "none";
-          el.style.visibility = "hidden";
-        }
-        el.style.color = "#000";
-      });
-      // console.log("ocultando precio");
-    }
-
-    function onReady(fn){
-      if (document.readyState === "loading"){
-        document.addEventListener("DOMContentLoaded", fn);
-      } else { fn(); }
-    }
-
-    onReady(function(){
-      hideZeroDollarElements();
-
-      var btn = document.getElementById("same_product_height");
-      if (btn){
-        btn.addEventListener("click", function(){
-          setTimeout(hideZeroDollarElements, 1500);
-        });
+(function(){
+  function markZeroPrices(){
+    document.querySelectorAll(".boost-sd__format-currency").forEach(function(el){
+      var txt = (el.textContent || '').replace(/\s/g,'');
+      if (txt === '$0' || txt === '$0.00' || txt === '$0,00') {
+        el.classList.add('is-zero');
       }
-
-      // Emulación del .ready() de jQuery sobre .boost-sd__filter-block
-      // 1) primera pasada
-      hideZeroDollarElements();
-      // 2) segunda pasada (comportamiento original con delay)
-      setTimeout(hideZeroDollarElements, 2500);
     });
-  })();
-  </script>
+  }
+  // Ejecuta una vez listo el DOM y reejecuta tras filtros/boost
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', markZeroPrices);
+  } else { markZeroPrices(); }
+  document.addEventListener('boost:updated', markZeroPrices); // si Boost emite evento — si no, puedes usar MutationObserver
+})();
+</script>
+
 
   <!-- ====== Microsoft Clarity (movido al final para no bloquear) ====== -->
   <script defer>
@@ -456,49 +457,4 @@
   </style>
 
 </body>
-<script defer>
-/* ========= Anti-reflow helpers ========= */
-(function(){
-  // Throttle por frame para scroll/resize
-  function rafThrottle(fn){
-    let ticking = false;
-    return function(...args){
-      if (!ticking) {
-        window.requestAnimationFrame(() => { fn.apply(this,args); ticking=false; });
-        ticking = true;
-      }
-    };
-  }
-
-  // Batch de lecturas y escrituras: evita intercalar read→write→read
-  const READS = [], WRITES = [];
-  function scheduleRead(fn){ READS.push(fn); if (!scheduleRead._p) kick(); }
-  function scheduleWrite(fn){ WRITES.push(fn); if (!scheduleWrite._p) kick(); }
-  function kick(){
-    if (kick._run) return;
-    kick._run = true;
-    requestAnimationFrame(() => {
-      let fn; while(fn = READS.shift()) { try{ fn(); }catch(e){} }
-      while(fn = WRITES.shift()) { try{ fn(); }catch(e){} }
-      kick._run = false;
-    });
-  }
-
-  // Oyentes pasivos por defecto para scroll/touch/wheel
-  const passiveEvents = ['touchstart','touchmove','wheel','mousewheel','touchforcechange'];
-  const _add = EventTarget.prototype.addEventListener;
-  EventTarget.prototype.addEventListener = function(type, listener, options){
-    if (passiveEvents.includes(type)) {
-      if (options === undefined) options = {passive:true};
-      else if (typeof options === 'boolean') options = { capture: options, passive:true };
-      else if (typeof options === 'object' && options.passive === undefined) options.passive = true;
-    }
-    return _add.call(this, type, listener, options);
-  };
-
-  // Exponer helpers globales
-  window.__antiReflow = {rafThrottle,scheduleRead,scheduleWrite};
-})();
-</script>
-
 </html>
