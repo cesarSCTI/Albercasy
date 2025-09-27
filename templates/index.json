@@ -11,7 +11,6 @@
   "sections": {
     "8dd2b1b9-b0f5-406e-a2cc-de6a06db03d6": {
       "type": "index-section-text_plus_image",
-      "disabled": true,
       "custom_css": [
         ".tpisectiontemplate--19552174670142__8dd2b1b9-b0f5-406e-a2cc-de6a06db03d6 .tt-layout-box01 .col-description .tt-title {font-weight: 700; color: #ffffff; text-shadow: 2px 2px 5px #00000057 !important;}"
       ],
