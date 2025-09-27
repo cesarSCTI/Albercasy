@@ -1,0 +1,62 @@
+{% form 'contact' %}
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="form-group">
+          <label for="inputName">Nombre</label>
+          <input type="text" name="contact[name]" value="{% if form[name] %}{{ form[name] }}{% elsif customer %}{{ customer.name }}{% endif %}" class="form-control" id="inputName" placeholder="{{ 'contact.form.name' | t }}">
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group">
+            <label for="inputEmail">Correo electronico</label>
+            <input type="email" name="contact[email]" autocorrect="off" autocapitalize="off" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" class="form-control" id="inputEmail" placeholder="{{ 'contact.form.email' | t }}">
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group">
+            <label for="inputTelefono">Teléfono</label>
+            <input type="tel" name="contact[telefono]" autocorrect="off" autocapitalize="off" value="" class="form-control" id="inputTelefono" placeholder="Teléfono">
+        </div>
+        <div class="col-md-6 col-sm-12">
+          <div class="form-group">
+            <fieldset>
+              <legend>CARACTERÍSTICAS DE LA ALBERCA</legend>
+              <div>
+                <input type="radio" id="Construccion" name="contact[construccion]" value="Construcción"/>
+                <label for="Construccion">En construcción</label>
+            
+                <input type="radio" id="Terminada" name="contact[Terminada]" value="Terminada"/>
+                <label for="Terminada">Terminada</label>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endform %}
+{% schema %}
+  {
+    "name": "Formulario Aliados",
+    "settings": [
+      {
+        "type": "text",
+        "id":"colorField",
+        "label":"color de campo"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Formulario Aliados",
+        "category": "Index"
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

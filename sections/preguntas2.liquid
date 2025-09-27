@@ -1,0 +1,52 @@
+<div class="container">
+  <div class="faq-content">
+      <div class="faq-question">
+        <input id="{{ section.settings.title | replace: " ", "" }}" type="checkbox" class="panel">
+        <div class="plus">+</div>
+        <label for="{{ section.settings.title | replace: " ", "" }}" class="panel-title">
+          {{ section.settings.title}}
+        </label>
+        <div class="panel-content">
+          {% for item in section.blocks%}
+            <div class="faq-question">
+              <input id="{{ item.settings.faqTitle | replace: " ", "" }}" type="checkbox" class="panelAdd">
+              <div class="plus">+</div>
+              <label for="{{ item.settings.faqTitle | replace: " ", "" }}" class="panel-title">
+                {{ item.settings.faqTitle}}</label>
+              <div class="panelAdd-content">{{ item.settings.faqBody}}</div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Preguntas",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titulo de FAQ"
+    }
+  ],
+  "blocks": [
+     {
+       "name": "Faq",
+       "type": "Faq",
+       "settings": [
+         {
+           "type": "text",
+           "id": "faqTitle",
+           "label": "Title"
+         },
+         {
+           "type": "richtext",
+           "id": "faqBody",
+           "label": "Cuerpo"
+         }
+       ]
+     }
+  ]
+}
+{% endschema %}

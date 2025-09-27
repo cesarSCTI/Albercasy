@@ -1,0 +1,68 @@
+<div class=" container mapCotainer" style="margin-top:50px;">
+  <div class="mapItem">
+    <img src="{{ section.settings.imagen | img_url: 'master' }}" alt="sucursal" >
+  </div>
+  <div class="mapItem">
+    {{ section.settings.html }}
+  </div>
+</div>
+<style>
+  .mapCotainer{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+  }
+  .mapItem{
+    min-height:300px;
+    width:50%;
+  }
+  .mapItem img{
+    width:100%;
+    height:500px;
+  }
+  .mapItem iframe{
+    width:100%;
+    height:500px;
+  }
+  @media only screen and (max-width:600px){
+    .mapCotainer{
+      flex-direction:column;
+    }
+    .mapItem{
+      width:100%;
+    }
+    .mapItem img{
+    width:100%;
+    height:auto;
+  }
+  .mapItem iframe{
+    width:100%;
+    height:300px;
+  }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Map with image",
+  "class": "index-section",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "html",
+      "label": "insertar iframe de mapa"
+    },
+    {
+      "type": "image_picker",
+      "id": "imagen",
+      "label": "Imagen"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Map with image",
+      "category": "Contact"
+    }
+  ]
+}
+{% endschema %}

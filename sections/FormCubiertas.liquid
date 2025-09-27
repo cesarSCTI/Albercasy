@@ -1,0 +1,359 @@
+{% form 'contact' %}
+  
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="form-group">
+          <label for="inputName">Nombre</label>
+          <input type="text" name="contact[name]" value="{% if form[name] %}{{ form[name] }}{% elsif customer %}{{ customer.name }}{% endif %}" class="form-control" id="inputName" placeholder="{{ 'contact.form.name' | t }}">
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group">
+            <label for="inputEmail">Correo electronico</label>
+            <input type="email" name="contact[email]" autocorrect="off" autocapitalize="off" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" class="form-control" id="inputEmail" placeholder="{{ 'contact.form.email' | t }}">
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group">
+            <label for="inputTelefono">Teléfono</label>
+            <input type="tel" name="contact[telefono]" autocorrect="off" autocapitalize="off" value="" class="form-control" id="inputTelefono" placeholder="Teléfono">
+        </div>
+      </div>
+        <div class="col-12 col-md-6">
+          <div class="form-group">
+            <fieldset>
+              <legend>CARACTERÍSTICAS DE LA ALBERCA</legend>
+              <div class="radioGroup">
+                <div>
+                  <input type="radio" id="Construccion" name="contact[construccion]" value="Construcción"/>
+                  <label for="Construccion">En construcción</label>
+                </div>
+                <div>
+                  <input type="radio" id="Terminada" name="contact[construccion]" value="Terminada"/>
+                  <label for="Terminada">Terminada</label>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <div class="col-12 col-md-6">
+          <div class="form-group">
+            <fieldset>
+              <legend>FORMA</legend>
+              <div class="radioGroup">
+                <div>
+                  <input type="radio" id="Regular" name="contact[Forma]" value="Regular"/>
+                  <label for="Regular">Regular</label>
+                </div>
+                <div>
+                  <input type="radio" id="Irregular" name="contact[Forma]" value="Irregular"/>
+                  <label for="Irregular">Irregular</label>
+                </div>
+                <div>
+                  <input type="radio" id="conInfinity" name="contact[Forma]" value="Con efecto infinity"/>
+                  <label for="conInfinity">Con efecto infinity</label>
+                </div>
+                <div>
+                  <input type="radio" id="sinInfinity" name="contact[Forma]" value="Sin efecto infinity"/>
+                  <label for="sinInfinity">Sin efecto infinity</label>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      <div class="col-12"><legend>Medidas</legend></div>
+      <div class="col-12 col-md-6">
+        <div class="form-group">
+            <label for="inputLargo">Largo (Mts)</label>
+            <input type="number" name="contact[Largo]" class="form-control" id="inputLargo">
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-group">
+            <label for="inputAncho">Ancho (Mts)</label>
+            <input type="number" name="contact[Ancho]" class="form-control" id="inputAncho">
+        </div>
+      </div>
+      <div class="col-12">
+          <div class="form-group">
+            <label for="avatar" style="margin-bottom:10px;">*Nota. Si tu alberca es irregular favor de anexar un plano. (cargar imagen)</label>
+            <div class="fileinput">
+              <input type="file" id="avatar" name="contact[Plano]" accept="image/png, image/jpeg" />
+            </div>
+          </div>
+        </div>
+      <div class="col-12 col-md-3">
+          <div class="form-group">
+            <fieldset>
+              <legend>CUBIERTA DE TU PREFERENCIA</legend>
+              <div class="radioGroup">
+                <div>
+                  <input type="radio" id="Automática" name="contact[Preferencia]" value="Automática"/>
+                  <label for="Automática">Automática</label>
+                </div>
+                <div>
+                  <input type="radio" id="Manual" name="contact[Preferencia]" value="Manual"/>
+                  <label for="Manual">Manual</label>
+                </div>
+                <div>
+                  <input type="radio" id="Anclas" name="contact[Preferencia]" value="Anclas"/>
+                  <label for="Anclas">Anclas</label>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      <div class="col-12 col-md-3">
+          <div class="form-group">
+            <fieldset>
+              <legend>SISTEMA DE RIELES DE PREFERENCIA</legend>
+              <div class="radioGroup">
+                <div>
+                  <input type="radio" id="BajoBanqueta" name="contact[Rieles]" value="Bajo Banqueta"/>
+                  <label for="BajoBanqueta">Bajo Banqueta</label>
+                </div>
+                <div>
+                  <input type="radio" id="SobreBanqueta" name="contact[Rieles]" value="Sobre Banqueta"/>
+                  <label for="SobreBanqueta">Sobre Banqueta</label>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      <div class="col-12 col-md-3">
+          <div class="form-group">
+            <fieldset>
+              <legend>SISTEMA DE NICHO DE PREFERENCIA</legend>
+              <div class="radioGroup">
+                <div>
+                  <input type="radio" id="BajoBanquetaNicho" name="contact[Nicho]" value="Bajo Banqueta"/>
+                  <label for="BajoBanquetaNicho">Bajo Banqueta</label>
+                </div>
+                <div>
+                  <input type="radio" id="SobreBanquetaNicho" name="contact[Nicho]" value="Sobre Banqueta"/>
+                  <label for="SobreBanquetaNicho">Sobre Banqueta</label>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      <div class="col-12 col-md-3">
+          <div class="form-group">
+            <fieldset>
+              <legend>SI SELECCIONA BAJO BANQUETA</legend>
+              <div class="radioGroup">
+                <div>
+                  <input type="radio" id="BajoBanquetaNichosi" name="contact[NichoBAjoBanqueta]" value="Nicho Concreto"/>
+                  <label for="BajoBanquetaNichosi">Nicho Concreto</label>
+                </div>
+                <div>
+                  <input type="radio" id="SobreBanquetaNichosi" name="contact[NichoBAjoBanqueta]" value="Nicho prefabricado"/>
+                  <label for="SobreBanquetaNichosi">Nicho prefabricado</label>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      <div class="col-12 col-md-6">
+          <div class="form-group">
+            <fieldset>
+              <legend>COLOR DE CUBIERTA</legend>
+              <div class="radioGroup">
+                <div>
+                  <input type="radio" id="Navy" name="contact[ColorCubierta]" value="Navy"/>
+                  <label for="Navy">Navy</label>
+                </div>
+                <div>
+                  <input type="radio" id="RoyalBlue" name="contact[ColorCubierta]" value="Royal Blue"/>
+                  <label for="RoyalBlue">Royal Blue</label>
+                </div>
+                <div>
+                  <input type="radio" id="LightBlue" name="contact[ColorCubierta]" value="Light Blue"/>
+                  <label for="LightBlue">Light Blue</label>
+                </div>
+                <div>
+                  <input type="radio" id="Aqua" name="contact[ColorCubierta]" value="Aqua"/>
+                  <label for="Aqua">Aqua</label>
+                </div>
+                <div>
+                  <input type="radio" id="ForestGreen" name="contact[ColorCubierta]" value="Forest Green"/>
+                  <label for="ForestGreen">Forest Green</label>
+                </div>
+                <div>
+                  <input type="radio" id="Tan" name="contact[ColorCubierta]" value="Tan"/>
+                  <label for="Tan">Tan</label>
+                </div>
+                <div>
+                  <input type="radio" id="Mocha" name="contact[ColorCubierta]" value="Mocha"/>
+                  <label for="Mocha">Mocha</label>
+                </div>
+                <div>
+                  <input type="radio" id="Grey" name="contact[ColorCubierta]" value="Grey"/>
+                  <label for="Grey">Grey</label>
+                </div>
+                <div>
+                  <input type="radio" id="Charcoal" name="contact[ColorCubierta]" value="Charcoal"/>
+                  <label for="Charcoal">Charcoal</label>
+                </div>
+                <div>
+                  <input type="radio" id="Black" name="contact[ColorCubierta]" value="Black"/>
+                  <label for="Black">Black</label>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <div class="col-12 col-md-6">
+          <img src="https://cdn.shopify.com/s/files/1/0766/7813/6126/files/colores_de_cubierta.png?v=1695325314" alt="colores cubiertas" loading="lazy" width="auto" height="auto"/>
+        </div>
+      <div class="col-12 col-md-6">
+          <div class="form-group">
+            <fieldset>
+              <legend>TIPO DE CONTROL DE PREFERENCIA</legend>
+              <div class="radioGroup">
+                <div>
+                  <input type="radio" id="RockerSwitch" name="contact[ControlPreferencia]" value="Rocker Switch"/>
+                  <label for="RockerSwitch">Rocker Switch</label>
+                </div>
+                <div>
+                  <input type="radio" id="Touch Screen" name="contact[ControlPreferencia]" value="Touch Screen"/>
+                  <label for="Touch Screen">Touch Screen</label>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <div class="col-12 col-md-6">
+          <img src="https://cdn.shopify.com/s/files/1/0766/7813/6126/files/tipos_de_ccontrol.png?v=1695325316" alt="Controles de preferencia" loading="lazy" width="auto" height="auto"/>
+        </div>
+        <div class="col-12">
+          <div class="form-group">
+              <p>¿REQUIEREN EL SERVICIO DE INSTALACIÓN PROFESIONAL?</p>
+              <label for="Domicilio">Sí (Indicar domicilio de instalación)</label>
+              <input type="text" name="contact[Domicilio]" class="form-control" id="Domicilio">
+          </div>
+        </div>
+      <div class="col-12">
+          <div class="form-group">
+              <label for="CP">No (Indicar Cp de envío de material)</label>
+              <input type="text" name="contact[CP]" class="form-control" id="CP">
+          </div>
+        </div>
+      <div class="col-12">
+          <div class="form-group">
+            <label for="renders" style="margin-bottom:10px;">PARA BRINDARTE UNA MEJOR ASESORÍA FAVOR DE AGREGAR FOTOS DE ALBERCA, RENDER DE DISEÑO O PLANO DE CONSTRUCCIÓN.</label>
+            <div class="fileinput">
+              <input type="file" id="renders1" name="contact[Render]" accept="image/png, image/jpeg" />
+            </div>
+            <div class="fileinput">
+              <input type="file" id="renders2" name="contact[Render2]" accept="image/png, image/jpeg" />
+            </div>
+            <div class="fileinput">
+              <input type="file" id="renders3" name="contact[Render3]" accept="image/png, image/jpeg" />
+            </div>
+          </div>
+        </div>
+      <div class="col-12">
+          <div class="form-group">
+              <label for="Comentarios">ESPACIO PARA ESCRIBIR INFORMACIÓN IMPORTANTE A MENCIONAR.</label>
+              <textarea name="contact[Comentarios]" class="form-control" id="Comentarios" rows="4"> </textarea>
+          </div>
+        </div>
+      <div class="col-12">
+        <input type="submit" class="btn" value="Solicitar Cotización" />
+      </div>
+    </div>
+  </div>
+{%- if form.posted_successfully? -%}
+      <p>{{ 'contact.form.post_success' | t }}</p>
+      {%- endif -%}
+
+      {{ form.errors | default_errors }}
+  
+<style>
+  .col-12, .col-md-6, .col-md-3{
+    margin:10px 0px;
+  }
+  form .container{
+    padding: 50px 0px;
+  }
+  legend{
+    margin-bottom:10px;
+  }
+  .form-group input, textarea{
+    background:#F4F4F4 !important;
+    border: solid 1px #F4F4F4 !important;
+  }
+  .form-control:focus {
+    outline-color: #E4C56B !important;
+    border-color: #E4C56B;
+    box-shadow: 0 0 0 0.2rem rgb(228 189 64 / 35%);
+}
+  label, legend, p{
+    font-weight:600;
+  }
+  .radioGroup label{
+    font-weight:400;
+  }
+  .radioGroup{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+  }
+  .radioGroup{
+    display:flex;
+    gap:10px;
+  }
+  .radioGroup input:checked{
+    outline-color: #E4C56B !important;
+    border-color: #E4C56B !important;
+    color:#E4C56B !important;
+    background: #E4C56B !important;
+  }
+   .radioGroup input[type="radio"]:checked + * {
+  color: #E4C56B !important;
+}
+  .radioGroup input[type="radio"]:checked + *::before {
+  background-color: #E4C56B !important;
+  border-color: #E4C56B !important;
+}
+  .fileinput{
+    background:#F4F4F4;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    padding:10px;
+    gap:10px;
+    margin-bottom:10px;
+  }
+  .col-12 img{
+    width:80%;
+  }
+</style>
+{% endform %}
+{% schema %}
+  {
+    "name": "Formulario Cubiertas",
+    "settings": [
+      {
+        "type": "text",
+        "id":"colorField",
+        "label":"color de campo"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Formulario Cubiertas",
+        "category": "Index"
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

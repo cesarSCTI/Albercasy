@@ -1,0 +1,19 @@
+<img src="{{ section.settings.imagen | img_url: 'master'}}" width="100%" height="auto"/>
+{% schema %}
+  {
+    "name": "Imagen",
+    "settings": [
+      {
+        "type":"image_picker",
+        "id":"imagen",
+        "label":"Imagen"
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}
