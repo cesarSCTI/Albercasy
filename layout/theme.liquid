@@ -1,6 +1,5 @@
 <!doctype html>
-<!--[if IE 9]> <html class="ie9 no-js{% if settings.use_rtl %} rtlstyle{% endif %}" lang="{{ shop.locale }}"> <![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!--> <html{% if settings.use_boxed %} id="tt-boxed"{% endif %} class="no-js{% if settings.use_rtl %} rtlstyle{% endif %}" lang="{{ shop.locale }}"> <!--<![endif]-->
+ <html{% if settings.use_boxed %} id="tt-boxed"{% endif %} class="no-js{% if settings.use_rtl %} rtlstyle{% endif %}" lang="{{ shop.locale }}">
 <head>
   <!-- Basic page needs ================================================== -->
   <meta charset="utf-8">
@@ -181,8 +180,11 @@
 
 {%- comment -%} Si settings.google_font_links trae un <link rel="stylesheet">, idealmente reescribir a preload+onload {%- endcomment -%}
 {{ settings.google_font_links | replace: 'rel="stylesheet"', 'rel="preload" as="style" onload="this.onload=null;this.rel=\'stylesheet\'"' }}
-
-{%- comment -%} === CSS del tema sin bloqueo === {%- endcomment -%}
+{{ 'core.css'  | asset_url | stylesheet_tag }}
+{{ 'grid.css'  | asset_url | stylesheet_tag }}
+{{ 'components.css' | asset_url | stylesheet_tag }}
+{{ 'pages.css'      | asset_url | stylesheet_tag }}
+{%- comment -%} === CSS del tema sin bloqueo === 
 <link rel="preload" as="style" href="{{ 'core.css'  | asset_url }}"  onload="this.onload=null;this.rel='stylesheet'">
 <link rel="preload" as="style" href="{{ 'grid.css'  | asset_url }}"  onload="this.onload=null;this.rel='stylesheet'">
 <noscript>
@@ -192,7 +194,7 @@
 
 <link rel="stylesheet" href="{{ 'components.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'pages.css'      | asset_url }}" media="print" onload="this.media='all'">
-
+{%- endcomment -%}
 {%- if settings.use_rtl -%}
 <link rel="stylesheet" href="{{ 'style-rtl.css' | asset_url }}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="{{ 'style-rtl.css' | asset_url }}"></noscript>
@@ -454,4 +456,49 @@
   </style>
 
 </body>
+<script defer>
+/* ========= Anti-reflow helpers ========= */
+(function(){
+  // Throttle por frame para scroll/resize
+  function rafThrottle(fn){
+    let ticking = false;
+    return function(...args){
+      if (!ticking) {
+        window.requestAnimationFrame(() => { fn.apply(this,args); ticking=false; });
+        ticking = true;
+      }
+    };
+  }
+
+  // Batch de lecturas y escrituras: evita intercalar read→write→read
+  const READS = [], WRITES = [];
+  function scheduleRead(fn){ READS.push(fn); if (!scheduleRead._p) kick(); }
+  function scheduleWrite(fn){ WRITES.push(fn); if (!scheduleWrite._p) kick(); }
+  function kick(){
+    if (kick._run) return;
+    kick._run = true;
+    requestAnimationFrame(() => {
+      let fn; while(fn = READS.shift()) { try{ fn(); }catch(e){} }
+      while(fn = WRITES.shift()) { try{ fn(); }catch(e){} }
+      kick._run = false;
+    });
+  }
+
+  // Oyentes pasivos por defecto para scroll/touch/wheel
+  const passiveEvents = ['touchstart','touchmove','wheel','mousewheel','touchforcechange'];
+  const _add = EventTarget.prototype.addEventListener;
+  EventTarget.prototype.addEventListener = function(type, listener, options){
+    if (passiveEvents.includes(type)) {
+      if (options === undefined) options = {passive:true};
+      else if (typeof options === 'boolean') options = { capture: options, passive:true };
+      else if (typeof options === 'object' && options.passive === undefined) options.passive = true;
+    }
+    return _add.call(this, type, listener, options);
+  };
+
+  // Exponer helpers globales
+  window.__antiReflow = {rafThrottle,scheduleRead,scheduleWrite};
+})();
+</script>
+
 </html>
