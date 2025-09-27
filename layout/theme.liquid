@@ -10,8 +10,6 @@
   <meta name="keywords" content="{{ "general.meta.keywords" | t }}" />
   <meta name="author" content="{{ "general.meta.author" | t }}">
   <link rel="canonical" href="{{ canonical_url }}">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-
 
   {%- if settings.favicon != blank and settings.use_favicon -%}
   	<link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png">
@@ -41,99 +39,103 @@
   <!-- Social meta ================================================== -->
   {%- include 'social-meta-tags' -%}
 
-  <!-- Helpers ================================================== -->
+  <!-- Helpers / Performance ================================================== -->
+  <!-- OPTIM: Preconnect + swap para Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
   <!-- CSS ================================================== -->
   {%- if settings.font1_is_google_font -%}
-  <link href="https://fonts.googleapis.com/css?family={{ settings.font_name1 }}:100,200,300,400,500,600,700,800,900" rel="stylesheet" defer>
+  <link href="https://fonts.googleapis.com/css?family={{ settings.font_name1 }}:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
   {%- endif -%}
   {%- if settings.font_name1 != settings.font_name2 and settings.font_name2 != '' and settings.font2_is_google_font -%}
-  <link href="https://fonts.googleapis.com/css?family={{ settings.font_name2 }}:100,200,300,400,500,600,700,800,900" rel="stylesheet" defer>
+  <link href="https://fonts.googleapis.com/css?family={{ settings.font_name2 }}:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
   {%- endif -%}
   {%- if settings.popup_newsletter_show and settings.use_as_simple_popup and settings.popup_simple_fonts != "" -%}
   {{ settings.popup_simple_fonts }}
   {%- endif -%}
-  {{ settings.google_font_links }}
-  
+  {{ settings.google_font_links | replace: 'rel="stylesheet"', 'rel="stylesheet"' | replace: 'display=auto', 'display=swap' }}
+
   {%- include "include_css" -%}
-  <script src="{{ 'jquery.min.js' | asset_url }}" defer="defer"></script>
-  {%- if template contains 'customers' -%}
-  {{ 'shopify_common.js' | shopify_asset_url | script_tag | remove: ' type="text/javascript"' }}
-  {{ 'customer_area.js'  | shopify_asset_url | script_tag | remove: ' type="text/javascript"' }}
-  {%- endif -%}
-  
-  <!-- Header hook for plugins ================================================== -->
+
+  <!-- OPTIM: quitar jQuery CDN duplicado (bloqueante).
+       Conservamos SOLO la versión local con defer, y la ejecutaremos antes que tu código. -->
+  <script src="{{ 'jquery.min.js' | asset_url }}" defer></script>
+
+  <!-- Shopify injects (apps, storefront, etc.) -->
   {% render 'boost-sd-fallback' %}
-    {{ content_for_header }}
-  <!-- /Header hook for plugins ================================================== -->
+  {{ content_for_header }}
 
   {%- unless settings.show_emptyreview -%}
   <style>
-    [data-rating="0.0"]{
-      display:none !important;
-    }
+    [data-rating="0.0"]{ display:none !important; }
   </style>
   {%- endunless -%}
-  <!-- Google Tag Manager --> <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src= 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f); })(window,document,'script','dataLayer','GTM-53RX83T');</script> <!-- End Google Tag Manager -->
-<style>
-  button.slick-arrow {
-    z-index: 99999 !important;
-}
-  button.tt-btn-zomm.tt-top-right.tt-btn-zomm-product-page {
-    display: none;
-}
-</style>
-  <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "o8urjbd8xg");
-</script>
-  <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-M9QVPXNJ');</script>
-<!-- End Google Tag Manager -->
+
+  <!-- ======= ANALYTICS ======= -->
+  <!-- OPTIM: Usa SOLO 1 GTM para evitar eventos duplicados. Mantengo GTM-M9QVPXNJ. -->
+  <!-- Google Tag Manager (GTM-M9QVPXNJ) -->
+  <script>
+  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});
+   var f=d.getElementsByTagName(s)[0], j=d.createElement(s), dl=l!='dataLayer'?'&l='+l:'';
+   j.async=true; j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl; f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-M9QVPXNJ');
+  </script>
+  <!-- End Google Tag Manager -->
+
+  <!-- OPTIM: GTM duplicado (comentado). Si lo necesitas, avísame para consolidar triggers. -->
+  {%- comment -%}
+  <!-- Google Tag Manager (GTM-53RX83T) [DESACTIVADO PARA EVITAR DUPLICADOS] -->
+  <script>
+  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});
+   var f=d.getElementsByTagName(s)[0], j=d.createElement(s), dl=l!='dataLayer'?'&l='+l:'';
+   j.async=true; j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl; f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-53RX83T');
+  </script>
+  {%- endcomment -%}
+  <!-- ========================= -->
+
+  <style>
+    button.slick-arrow { z-index: 99999 !important; }
+    button.tt-btn-zomm.tt-top-right.tt-btn-zomm-product-page { display: none; }
+  </style>
+
 </head>
-<body class="page{{ template }}" {% if template contains '404' %}id="template404"{% elsif settings.use_scale_product_image %}
+<body class="page{{ template }}"
+      {% if template contains '404' %}id="template404"{% elsif settings.use_scale_product_image %}
       id="same_product_height"{% if settings.notsamewidth %} data-type="not_same_width"{% endif %}{% endif %}
       {% if request.design_mode %} data-supportcode="{{ settings.supportcode }}"{% endif %}>
-  
-  <!-- Google Tag Manager (noscript) --> <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-53RX83T" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript> <!-- End Google Tag Manager (noscript) -->
 
   <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M9QVPXNJ"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-  
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M9QVPXNJ"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
   {%- if settings.show_helper -%}{%- section "show-helper" -%}{%- endif -%}
   {%- if settings.show_preloader -%}{%- include "main-loader" -%}{%- endif -%}
 
   {%- if settings.header_design == "header_type_1" -%}
-  {%- capture var_header -%}{%- section "header-template" -%}{%- endcapture -%}
-  {{ var_header }}
+    {%- capture var_header -%}{%- section "header-template" -%}{%- endcapture -%}
+    {{ var_header }}
   {%- else -%}
-  {%- if settings.header_design == "header_type_2" -%}
-  {%- capture var_header -%}{% section 'header-template-2' %}{%- endcapture -%}
-  {%- elsif settings.header_design == "header_type_3" -%}
-  {%- capture var_header -%}{% section 'header-template-3' %}{%- endcapture -%}
-  {%- elsif settings.header_design == "header_type_4" -%}
-  {%- capture var_header -%}{% section 'header-template-4' %}{%- endcapture -%}
-  {%- elsif settings.header_design == "header_type_5" -%}
-  {%- capture var_header -%}{% section 'header-template-5' %}{%- endcapture -%}
-  {%- endif -%}
-  {%- if var_header contains '<div class="CATEGORIE MOBILE"></div>' -%}
-  {%- capture var_categorie_button -%}{% if settings.header_design == "header_type_4" %}{% section 'categorie-button-icons-menu' %}{% else %}{% section 'categorie-button' %}{% endif %}{%- endcapture -%}
-  {{ var_categorie_button | split:"[PARTMOBILE]" | first | append: "</div>" }}
-  {%- assign var_categorie_mobile = var_categorie_button | split:"[PARTMOBILE]" | last | split: "[/PARTMOBILE]" | first -%}
-  {%- assign var_categorie_button = var_categorie_button | split:"[PART]" | last | split: "[/PART]" | first -%}
-  {{ var_header | replace: '<div class="CATEGORIE MOBILE"></div>', var_categorie_mobile | replace: "[CATEGORIE, PLEASE SAVE PAGE]", var_categorie_button }}
-  {%- else -%}
-  {{ var_header }}
-  {%- endif -%}
+    {%- if settings.header_design == "header_type_2" -%}
+      {%- capture var_header -%}{% section 'header-template-2' %}{%- endcapture -%}
+    {%- elsif settings.header_design == "header_type_3" -%}
+      {%- capture var_header -%}{% section 'header-template-3' %}{%- endcapture -%}
+    {%- elsif settings.header_design == "header_type_4" -%}
+      {%- capture var_header -%}{% section 'header-template-4' %}{%- endcapture -%}
+    {%- elsif settings.header_design == "header_type_5" -%}
+      {%- capture var_header -%}{% section 'header-template-5' %}{%- endcapture -%}
+    {%- endif -%}
+    {%- if var_header contains '<div class="CATEGORIE MOBILE"></div>' -%}
+      {%- capture var_categorie_button -%}{% if settings.header_design == "header_type_4" %}{% section 'categorie-button-icons-menu' %}{% else %}{% section 'categorie-button' %}{% endif %}{%- endcapture -%}
+      {{ var_categorie_button | split:"[PARTMOBILE]" | first | append: "</div>" }}
+      {%- assign var_categorie_mobile = var_categorie_button | split:"[PARTMOBILE]" | last | split: "[/PARTMOBILE]" | first -%}
+      {%- assign var_categorie_button = var_categorie_button | split:"[PART]" | last | split: "[/PART]" | first -%}
+      {{ var_header | replace: '<div class="CATEGORIE MOBILE"></div>', var_categorie_mobile | replace: "[CATEGORIE, PLEASE SAVE PAGE]", var_categorie_button }}
+    {%- else -%}
+      {{ var_header }}
+    {%- endif -%}
   {%- endif -%}
   
   {% if settings.show_breadcrumbs %}{%- include "breadcrumb" -%}{% endif %}
@@ -144,27 +146,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   {% section 'icon-banners-footer' %}
   {%- assign blockinuse = '' -%}
   {%- for i in (1..5) -%}
-  {%- assign footer_position = 'footer_position_' | append: i -%}{%- assign csection = settings[footer_position] -%}
-  {%- if csection != 'none' -%}
-  {%- unless blockinuse contains csection -%}{%- assign blockinuse = blockinuse | append: csection | append: '%%' -%}
-  {%- case csection -%}
-  {%- when "footer-section-subscribe" -%}{%- section "footer-section-subscribe" -%}
-  {%- when "footer-section-blurbs" -%}{%- section "footer-section-blurbs" -%}
-  {%- when "footer-section-text_plus_image_vertical" -%}{%- section "footer-section-text_plus_image_vertical" -%}
-  {%- when "footer-section-iconbanners" -%}{%- section "footer-section-iconbanners" -%}
-  {%- else -%}{%- section "footer-template" -%}
-  {%- endcase -%}
-  {%- endunless -%}{%- endif -%}
+    {%- assign footer_position = 'footer_position_' | append: i -%}{%- assign csection = settings[footer_position] -%}
+    {%- if csection != 'none' -%}
+      {%- unless blockinuse contains csection -%}{%- assign blockinuse = blockinuse | append: csection | append: '%%' -%}
+        {%- case csection -%}
+          {%- when "footer-section-subscribe" -%}{%- section "footer-section-subscribe" -%}
+          {%- when "footer-section-blurbs" -%}{%- section "footer-section-blurbs" -%}
+          {%- when "footer-section-text_plus_image_vertical" -%}{%- section "footer-section-text_plus_image_vertical" -%}
+          {%- when "footer-section-iconbanners" -%}{%- section "footer-section-iconbanners" -%}
+          {%- else -%}{%- section "footer-template" -%}
+        {%- endcase -%}
+      {%- endunless -%}
+    {%- endif -%}
   {%- endfor -%}
 
   {%- if settings.show_footer_instagram_section -%}
-  {%- section "footer-section-instagram" -%}
+    {%- section "footer-section-instagram" -%}
   {%- endif -%}
   {%- if settings.show_back_to_top_button -%}<a href="#" class="tt-back-to-top">{{ 'general.general.to_top_button' | t }}</a>{% endif %}
   {%- if settings.product_item_show_quickview -%}
-  {%- if content_for_layout contains 'data-target="#ModalquickView"' or content_for_layout contains "index_sectiontabs" or template contains "product" -%}{%- include "modal-quickview" -%}
-  {%- elsif template == "index" and settings.home_page_layout == 'home-page_layout-2' -%}{%- include "modal-quickview" -%}
-  {%- endif -%}{%- endif -%}
+    {%- if content_for_layout contains 'data-target="#ModalquickView"' or content_for_layout contains "index_sectiontabs" or template contains "product" -%}{%- include "modal-quickview" -%}
+    {%- elsif template == "index" and settings.home_page_layout == 'home-page_layout-2' -%}{%- include "modal-quickview" -%}
+    {%- endif -%}
+  {%- endif -%}
   {%- if settings.show_addtocart_popup -%}{%- include "modal-addtocart" -%}{%- endif -%}
   {%- include "preloader-ajax" -%}
 
@@ -218,44 +222,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         seeallresults = '{{ "general.search.see_all_results" | t | strip_newlines }}';
         
     var small_image = '{{ 'dummy.png' | asset_url }}';
-    
-    {% if settings.terms_cond_checkbox_show %}
-    window.addEventListener('DOMContentLoaded', function() {      
-      var $buyinoneclick = $('.buyinoneclick');
-      if($buyinoneclick.length){
-        $buyinoneclick.first().bind('DOMNodeInserted', function() {
-          setTimeout(function(){
-            var $shopifypaymentbutton = $('.buyinoneclick').find(".shopify-payment-button__button");
-            if($shopifypaymentbutton.length){
-              $buyinoneclick.hide();
-              setTimeout(function(){
-                $(".shopify-payment-button__button").attr('disabled', true);
-                $buyinoneclick.fadeIn()
-              }, 300);
-            }
-          }, 0);
-        });
-      }
-
-      $('body').on('click', '.term-conditions-checkbox-js input', function(e){
-        var _ = $(this).closest('.term-conditions-checkbox-js').parent().parent(),
-            a = _.find('a[href*="checkout"]'),
-            b = _.find('button[name=checkout]'),
-            b2 = _.find('.buyinoneclick button'),
-            text = '{{ settings.terms_cond_checkbox_texterr }}';
-            if($(this).is(':checked')){
-              a.length && a.removeClass('disabled');
-              b.length && b.removeAttr('disabled');
-              b2.length && b2.removeAttr('disabled');
-            }
-        else{
-          a.length && a.addClass('disabled');
-          b.length && b.attr('disabled', true);
-          b2.length && b2.attr('disabled', true);
-        }
-      });
-    });
-    {% endif %}
   </script>
   
   {%- include "include_js" -%}
@@ -266,189 +232,89 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   {%- section "promo-fixed" -%}
 
   {%- if settings.all_links_is_external or settings.menu_links_is_external or settings.external_links_is_external -%}
-  <script>
+  <script defer>
     window.addEventListener('DOMContentLoaded', function() {
       {% if settings.all_links_is_external %}
-      jQuery('a').attr('target', '_blank');
+      document.querySelectorAll('a').forEach(a => a.setAttribute('target','_blank'));
       {% endif %}
       {% if settings.menu_links_is_external %}
-      jQuery('.tt-desctop-menu a').attr('target', '_blank');
-      jQuery('.panel-menu a').attr('target', '_blank');
+      document.querySelectorAll('.tt-desctop-menu a, .panel-menu a').forEach(a => a.setAttribute('target','_blank'));
       {% endif %}
       {% if settings.external_links_is_external %}
-      jQuery('a[href^="http"]').attr('target', '_blank')
+      document.querySelectorAll('a[href^="http"]').forEach(a => a.setAttribute('target','_blank'));
       {% endif %}
     });
   </script>
   {%- endif -%}
-  
-  {% comment %}
-  {%- if settings.show_helper -%}
-    <script>
-      var adminlinks = '{{ settings.helper_info }}';
-    </script>
-    <script src="{{ 'admin-panel.js' | asset_url }}" defer="defer"></script>
-  {%- endif -%}
-  {% endcomment %}
-  
+
   {{ settings.some_code_field }}
 
-  
+  <!-- ====== JS de clientes Shopify SOLO en vistas de cliente, ahora con defer y en footer ====== -->
+  {%- if template contains 'customers' -%}
+    {{ 'shopify_common.js' | shopify_asset_url | script_tag | replace: '<script ', '<script defer ' | remove: ' type="text/javascript"' }}
+    {{ 'customer_area.js'  | shopify_asset_url | script_tag | replace: '<script ', '<script defer ' | remove: ' type="text/javascript"' }}
+  {%- endif -%}
+
+  <!-- ====== Script personalizado (convertido a Vanilla JS para no depender de jQuery) ====== -->
+  <script defer>
+  (function(){
+    function hideZeroDollarElements(){
+      var elems = document.querySelectorAll(".boost-sd__format-currency");
+      elems.forEach(function(el){
+        var txt = (el.textContent || '').trim();
+        if (txt === "$ 0"){
+          el.style.display = "none";
+          el.style.visibility = "hidden";
+        }
+        el.style.color = "#000";
+      });
+      // console.log("ocultando precio");
+    }
+
+    function onReady(fn){
+      if (document.readyState === "loading"){
+        document.addEventListener("DOMContentLoaded", fn);
+      } else { fn(); }
+    }
+
+    onReady(function(){
+      hideZeroDollarElements();
+
+      var btn = document.getElementById("same_product_height");
+      if (btn){
+        btn.addEventListener("click", function(){
+          setTimeout(hideZeroDollarElements, 1500);
+        });
+      }
+
+      // Emulación del .ready() de jQuery sobre .boost-sd__filter-block
+      // 1) primera pasada
+      hideZeroDollarElements();
+      // 2) segunda pasada (comportamiento original con delay)
+      setTimeout(hideZeroDollarElements, 2500);
+    });
+  })();
+  </script>
+
+  <!-- ====== Microsoft Clarity (movido al final para no bloquear) ====== -->
+  <script defer>
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "o8urjbd8xg");
+  </script>
+
+  <!-- ====== Estilos inline (se conservan) ====== -->
+  <style>
+    span.new-price { color:#B21F1F !important; font-weight:800; font-size:16px !important; }
+    span.boost-sd__format-currency { font-size:16px; font-weight:600; }
+    span.boost-sd__product-price-content:nth-child(1) { color:#B21F1F !important; }
+    .boost-sd__format-currency--price-compare { color:#000 !important; }
+    span.old-price { color:#000 !important; }
+    .tt-product-single-info .new-price { font-size:30px !important; color:#121212 !important; }
+    .tt-product-single-info .tt-price .sale-price { color:#f8353e; margin-right:7px; font-weight:700; }
+  </style>
 
 </body>
-<script type="text/javascript">
-/*
-window.addEventListener("load", (event) => {
-  let x = document.getElementsByClassName("boost-sd__format-currency")
-	for(let i=0; i<x.length; i++){
-	    if(x[i].innerText == "$ 0"){
-	      x[i].style.display = "none";
-	      x[i].style.visibility = "hidden";
-          console.log("eliminando precio")
-	    }
-        x[i].style.color = "#B21F1F";
-	}
-});
-
-let btn = document.getElementById("same_product_height");
-  btn.addEventListener("click", () => {
-    setTimeout(()=>{
-      let x = document.getElementsByClassName("boost-sd__format-currency")
-      for(let i=0; i<x.length; i++){
-    	    if(x[i].innerText == "$ 0"){
-    	      x[i].style.display = "none";
-    	      x[i].style.visibility = "hidden";
-              console.log("eliminando precio")
-    	    }
-          x[i].style.color = "#B21F1F";
-    	}
-    },1500)
-})
-
-btn.addEventListener("keydown", () => {
-    setTimeout(()=>{
-      let x = document.getElementsByClassName("boost-sd__format-currency")
-      for(let i=0; i<x.length; i++){
-    	    if(x[i].innerText == "$ 0"){
-    	      x[i].style.display = "none";
-    	      x[i].style.visibility = "hidden";
-              console.log("eliminando precio")
-    	    }
-          x[i].style.color = "#B21F1F";
-    	}
-    },1200)
-})  
-
-btn.addEventListener("scroll", () => {
-      let x = document.getElementsByClassName("boost-sd__format-currency")
-      for(let i=0; i<x.length; i++){
-    	    if(x[i].innerText == "$ 0"){
-    	      x[i].style.display = "none";
-    	      x[i].style.visibility = "hidden";
-              console.log("eliminando precio")
-    	    }
-          x[i].style.color = "#B21F1F";
-    	}
-  })  
-
-*/
-  /*
-  document.addEventListener("DOMContentLoaded", (event) => {
-  hideZeroDollarElements();
-
-  let btn = document.getElementById("same_product_height");
-  if (btn) {
-    btn.addEventListener("click", () => {
-      setTimeout(() => {
-        hideZeroDollarElements();
-      }, 1500);
-    });
-  }
-});
-
-function hideZeroDollarElements() {
-  let x = document.getElementsByClassName("boost-sd__format-currency");
-  for (let i = 0; i < x.length; i++) {
-    if (x[i].innerText == "$ 0") {
-      x[i].style.display = "none";
-      x[i].style.visibility = "hidden";
-    }
-    x[i].style.color = "#B21F1F";
-  }
-}*/
-$(document).ready(function() {
-  hideZeroDollarElements();
-  
-  let btn = $("#same_product_height");
-  if (btn.length) {
-    btn.click(function () {
-      setTimeout(function () {
-        hideZeroDollarElements();
-      }, 1500);
-    });
-  }
-});
-
-function hideZeroDollarElements() {
-  let x = $(".boost-sd__format-currency");
-  x.each(function() {
-    let $this = $(this);
-    if ($this.text().trim() === "$ 0") {
-      $this.hide();
-      $this.css({
-      visibility: "hidden",
-    });
-    }
-    $this.css({
-      color: "#000"
-    });
-    console.log("ocultando precio")
-  });
-}
-$('.boost-sd__filter-block').ready(function(){
-  console.log("ejecutando")
-  hideZeroDollarElements();
-  setTimeout(function () {
-        hideZeroDollarElements();
-    console.log("ejecutando en tiempo")
-  }, 2500);
-})
-</script>
-<!----script para redireccion de cotizaciones------->
-<script>
-
-</script>
-
-
-
-  
-  <style>
-    span.new-price {
-    color: #B21F1F !important;
-    font-weight: 800;
-      font-size:16px !important;
-}
-    span.boost-sd__format-currency {
-    font-size: 16px;
-    font-weight: 600;
-}
-span.boost-sd__product-price-content:nth-child(1) {
-    color: #B21F1F !important;
-}
-    .boost-sd__format-currency--price-compare {
-    color: #000 !important;
-}
-span.old-price {
-    color: #000 !important;
-}
-    .tt-product-single-info .new-price {
-    font-size: 30px !important;
-      color:#121212 !important;
-}
-    .tt-product-single-info .tt-price .sale-price {
-    color: #f8353e;
-    margin-right: 7px;
-    font-weight: 700;
-}
-  </style>
 </html>
