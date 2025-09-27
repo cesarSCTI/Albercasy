@@ -9523,6 +9523,7 @@ img.tp-slider-alternative-image{
   src: url("revicons.eot?5510888#iefix") format("embedded-opentype"), url("revicons.woff?5510888") format("woff"), url("revicons.ttf?5510888") format("truetype"), url("revicons.svg?5510888#revicons") format("svg");
   font-weight: normal;
   font-style: normal;
+  font-display: "swap";
 }
 [class^="revicon-"]:before, [class*=" revicon-"]:before{
   font-family: "revicons";
@@ -9774,6 +9775,7 @@ img.tp-slider-alternative-image{
     url('wokiee_icons.svg?87a912#wokiee_icons') format('svg');
   font-weight: normal;
   font-style: normal;
+  font-display:"swap";
 }
 
 [class^="icon-"], [class*=" icon-"] {

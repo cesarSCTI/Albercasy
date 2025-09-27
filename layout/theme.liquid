@@ -183,8 +183,8 @@
 {{ settings.google_font_links | replace: 'rel="stylesheet"', 'rel="preload" as="style" onload="this.onload=null;this.rel=\'stylesheet\'"' }}
 
 {%- comment -%} === CSS del tema sin bloqueo === {%- endcomment -%}
-<link rel="preload" as="style" href="{{ 'core.css'  | asset_url }}"  onload="this.onload=null;this.rel='stylesheet'">
-<link rel="preload" as="style" href="{{ 'grid.css'  | asset_url }}"  onload="this.onload=null;this.rel='stylesheet'">
+{{ 'core.css' | asset_url | stylesheet_tag: preload: true }}
+{{ 'grid.css' | asset_url | stylesheet_tag: preload: true }}
 <noscript>
   <link rel="stylesheet" href="{{ 'core.css'  | asset_url }}">
   <link rel="stylesheet" href="{{ 'grid.css'  | asset_url }}">
@@ -194,15 +194,10 @@
 <link rel="stylesheet" href="{{ 'pages.css'      | asset_url }}" media="print" onload="this.media='all'">
 
 {%- if settings.use_rtl -%}
-<link rel="stylesheet" href="{{ 'style-rtl.css' | asset_url }}" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="{{ 'style-rtl.css' | asset_url }}"></noscript>
+  <link rel="stylesheet" href="{{ 'style-rtl.css' | asset_url }}" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="{{ 'style-rtl.css' | asset_url }}"></noscript>
 {%- endif -%}
-
-
-
-  <!-- OPTIM: quitar jQuery CDN duplicado (bloqueante).
-       Conservamos SOLO la versión local con defer, y la ejecutaremos antes que tu código. -->
-  <script src="{{ 'jquery.min.js' | asset_url }}" defer></script>
+<script src="{{ 'jquery.min.js' | asset_url }}" defer></script>
 
   <!-- Shopify injects (apps, storefront, etc.) -->
   {% render 'boost-sd-fallback' %}
