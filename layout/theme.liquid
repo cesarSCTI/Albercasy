@@ -179,41 +179,7 @@
 
 <!-- jQuery local (defer) -->
 <script src="{{ 'jquery.min.js' | asset_url }}" defer></script>
-<!-- ==== PATCH #1A: Apagar animaciones jQuery (evita layout thrash) ==== -->
-<script defer>
-(function waitForJQ(){
-  if (!window.jQuery) { return setTimeout(waitForJQ, 50); }
-  try { jQuery.fx.off = true; } catch(e){}
-})();
-</script>
 
-<!-- ==== PATCH #1B: Scroll/Touch/Wheel pasivos por defecto (menos bloqueo main) ==== -->
-<script>
-(function(){
-  var supportsPassive = false;
-  try {
-    var opts = Object.defineProperty({}, 'passive', { get: function(){ supportsPassive = true; } });
-    window.addEventListener('test-passive', null, opts);
-  } catch(e){}
-
-  if (!supportsPassive) return;
-
-  var orig = EventTarget.prototype.addEventListener;
-  var passiveMap = { touchstart:1, touchmove:1, wheel:1, mousewheel:1, scroll:1 };
-  EventTarget.prototype.addEventListener = function(type, listener, options){
-    if (passiveMap[type]) {
-      if (options == null) options = { capture:false, passive:true };
-      else if (typeof options === 'boolean') options = { capture: options, passive:true };
-      else if (options.passive == null) options.passive = true;
-    }
-    return orig.call(this, type, listener, options);
-  };
-})();
-</script>
-
-
-<!-- Shopify injects (apps, storefront, etc.) -->
-{% render 'boost-sd-fallback' %}
 {{ content_for_header }}
 
 {%- unless settings.show_emptyreview -%}
@@ -407,44 +373,21 @@
   {%- endif -%}
 
   <!-- ====== Script personalizado (Vanilla) ====== -->
-  <!-- ====== Script personalizado (Vanilla) + domBatch para evitar reflows ====== -->
   <script defer>
   (function(){
-    /* === domBatch: agrupa lecturas (measure) y escrituras (mutate) en el mismo frame === */
-    window.domBatch = (function(){
-      var rQ=[], wQ=[], scheduled=false;
-      function run(){
-        scheduled = false;
-        var r = rQ.slice(); rQ.length = 0; for (var i=0;i<r.length;i++){ try{ r[i](); }catch(e){} }
-        var w = wQ.slice(); wQ.length = 0; for (var j=0;j<w.length;j++){ try{ w[j](); }catch(e){} }
-      }
-      function schedule(){ if (!scheduled){ scheduled = true; requestAnimationFrame(run); } }
-      return {
-        measure: function(fn){ rQ.push(fn); schedule(); },
-        mutate:  function(fn){ wQ.push(fn); schedule(); }
-      };
-    })();
-
     function markZeroPrices(){
-      domBatch.measure(function(){
-        var list = document.querySelectorAll(".boost-sd__format-currency");
-        domBatch.mutate(function(){
-          list.forEach(function(el){
-            var txt = (el.textContent || '').replace(/\s/g,'');
-            if (txt === '$0' || txt === '$0.00' || txt === '$0,00') el.classList.add('is-zero');
-          });
-        });
+      document.querySelectorAll(".boost-sd__format-currency").forEach(function(el){
+        var txt = (el.textContent || '').replace(/\s/g,'');
+        if (txt === '$0' || txt === '$0.00' || txt === '$0,00') {
+          el.classList.add('is-zero');
+        }
       });
     }
-
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', markZeroPrices, {once:true});
+      document.addEventListener('DOMContentLoaded', markZeroPrices);
     } else { markZeroPrices(); }
-
-    // Reejecutar tras cambios del grid/boost
     document.addEventListener('boost:updated', markZeroPrices);
   })();
-
   </script>
 
   <!-- ====== Loader de terceros (reduce TBT) ====== -->
@@ -491,6 +434,7 @@
     .tt-product-single-info .new-price { font-size:30px !important; color:#121212 !important; }
     .tt-product-single-info .tt-price .sale-price { color:#f8353e; margin-right:7px; font-weight:700; }
   </style>
-
+  <!-- Shopify injects (apps, storefront, etc.) -->
+  {% render 'boost-sd-fallback' %}
 </body>
 </html>
