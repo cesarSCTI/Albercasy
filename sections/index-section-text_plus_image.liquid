@@ -1,8 +1,62 @@
 {%- assign item = section.settings -%}
 
 <div class="{{ section.settings.customCSS }} {% if item.top_offset == 'none' %}nomargin {% elsif item.top_offset == 'small' %}tt-offset-small {% endif %}container-indent tpisection{{ section.id }}">
-  {% if item.usebgcolor %}<div class="layout-box01-wrapper"{% if item.showbgimage_bg %} style="background-image: url({{ item.image_bg | img_url: '2048x' }});"{% endif %}>{% endif %}
-    <div class="container{% if item.fullwidth %}-fluid{% endif %}">
+  {% if item.usebgcolor %}
+  <div class="layout-box01-wrapper">
+    {% if item.showbgimage_bg and item.image_bg %}
+      {%- comment -%}
+        Fondo como <picture> para poder usar fetchpriority y evitar CLS.
+        Ajusta el “sizes” si tu contenedor no ocupa el ancho completo.
+      {%- endcomment -%}
+      {%- assign bg_sizes = '100vw' -%}
+      {%- assign bg_w = 1920 -%}
+      {%- if item.image_bg.width < bg_w -%}{%- assign bg_w = item.image_bg.width -%}{%- endif -%}
+      {%- assign bg_h = bg_w | divided_by: item.image_bg.aspect_ratio | round -%}
+
+      {%- comment -%} Preload LCP sólo en Home {%- endcomment -%}
+      {% if template == 'index' %}
+        <link rel="preload" as="image"
+              href="{{ item.image_bg | image_url: width: 1920, format: 'webp' }}"
+              imagesrcset="
+                {{ item.image_bg | image_url: width: 1024, format: 'webp' }} 1024w,
+                {{ item.image_bg | image_url: width: 1440, format: 'webp' }} 1440w,
+                {{ item.image_bg | image_url: width: 1920, format: 'webp' }} 1920w"
+              imagesizes="{{ bg_sizes }}"
+              fetchpriority="high">
+      {% endif %}
+
+      <div class="hero-bg">
+        <picture>
+          <source type="image/avif"
+                  srcset="
+                    {{ item.image_bg | image_url: width: 1024, format: 'avif' }} 1024w,
+                    {{ item.image_bg | image_url: width: 1440, format: 'avif' }} 1440w,
+                    {{ item.image_bg | image_url: width: 1920, format: 'avif' }} 1920w">
+          <source type="image/webp"
+                  srcset="
+                    {{ item.image_bg | image_url: width: 1024, format: 'webp' }} 1024w,
+                    {{ item.image_bg | image_url: width: 1440, format: 'webp' }} 1440w,
+                    {{ item.image_bg | image_url: width: 1920, format: 'webp' }} 1920w">
+          <img
+            class="hero-bg__img"
+            src="{{ item.image_bg | image_url: width: 1440, format: 'pjpg' }}"
+            srcset="
+              {{ item.image_bg | image_url: width: 1024, format: 'pjpg' }} 1024w,
+              {{ item.image_bg | image_url: width: 1440, format: 'pjpg' }} 1440w,
+              {{ item.image_bg | image_url: width: 1920, format: 'pjpg' }} 1920w"
+            sizes="{{ bg_sizes }}"
+            width="{{ bg_w }}" height="{{ bg_h }}"
+            alt=""
+            aria-hidden="true"
+            decoding="async"
+            loading="eager"
+            fetchpriority="{% if template == 'index' %}high{% else %}low{% endif %}">
+        </picture>
+      </div>
+    {% endif %}
+{% endif %}
+  
+  <div class="container{% if item.fullwidth %}-fluid{% endif %}">
       <!-- obj -->
       <div class="row tt-layout-box01{% if item.reverse %} flex-row-reverse{% endif %} {{ item.contentalign }}">
         <div class="col-img col-md-{{ item.grid | split: '.' | first }}{% unless item.showimage %} d-sm-none-custom{% endunless %} respimgsize">
@@ -152,7 +206,34 @@
     width: 0%;
     background: {{ item.bg_color_a }};
   }
-  
+/* Fondo como imagen real detrás del contenido */
+.tpisection{{ section.id }} .layout-box01-wrapper{
+  position: relative;
+  background-color: {{ item.bgco }};
+  overflow: hidden;
+}
+.tpisection{{ section.id }} .layout-box01-wrapper .hero-bg{
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.tpisection{{ section.id }} .layout-box01-wrapper .hero-bg__img{
+  width: 100%;
+  height: 100%;
+  object-fit: {% if item.imagesize_bg == 'contain' %}contain{% else %}cover{% endif %};
+  object-position:
+    {% case item.imagealign_bg %}
+      {% when 'top' %} center top
+      {% when 'bottom' %} center bottom
+      {% else %} center center
+    {% endcase %};
+  display:block;
+}
+.tpisection{{ section.id }} .layout-box01-wrapper > .container{
+  position: relative;
+  z-index: 1; /* el contenido queda por encima del fondo */
+}
+
 </style>
 
 {% schema %}
