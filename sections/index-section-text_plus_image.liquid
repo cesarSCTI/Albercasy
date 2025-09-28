@@ -9,9 +9,7 @@
           {% if item.showimage %}
           {%- if item.image == blank -%}{%- include "get_svg" type:'image' size:'580x400' -%}
           {%- else -%}
-          <img class="lazyload"
-               data-mainimage="{{ item.image | img_url: '100x100' | replace: '100x100', 'respimgsize' }}"
-               alt="{{ item.image.alt }}">
+              {{ item.image | image_url: width: , height:  | replace: '100x100', 'respimgsize' | img_tag: item.image.alt, 'lazyload' }}
           {%- endif -%}
           {% endif %}
         </div>
