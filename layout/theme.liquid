@@ -156,9 +156,17 @@
       onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap"></noscript>
 
-{{ 'theme.css' | asset_url | stylesheet_tag }}
+<!-- Mobile only -->
+<link rel="stylesheet"
+      href="{{ 'theme2.mobile.css' | asset_url }}"
+      media="(max-width: 1024px)">
 
+<!-- Desktop only -->
+<link rel="stylesheet"
+      href="{{ 'theme2.desktop.css' | asset_url }}"
+      media="(min-width: 1025px)">
 {%- comment -%} CSS no crítico → print hack
+{{ 'theme.css' | asset_url | stylesheet_tag }}
  <link rel="stylesheet" href="{{ 'core.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'components.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'grid.css'       | asset_url }}" media="print" onload="this.media='all'">
