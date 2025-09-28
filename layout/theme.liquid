@@ -40,16 +40,14 @@
   {%- comment -%} === CRITICAL INLINE (no bloquear) === {%- endcomment -%}
 <style id="critical-css">
   /* Aísla layouts del contenido principal y permite paint parcial */
-    #tt-pageContent{ 
-    contain: layout paint style;   /* soportado en Chrome */
-    content-visibility: auto;      /* las partes fuera de vista no recalculan */
-    contain-intrinsic-size: 1000px;/* tamaño “fantasma” hasta que se pinte */
-    }
+  #tt-pageContent{ 
+    contain: layout paint style;
+    content-visibility: auto;
+    contain-intrinsic-size: 1000px;
+  }
 
   /* ====== RESET + BOX-SIZING ====== */
-  *,
-  *::before,
-  *::after { box-sizing: border-box; }
+  *, *::before, *::after { box-sizing: border-box; }
 
   /* ====== HTML / BODY ====== */
   html { line-height: 1.15; -webkit-text-size-adjust:100%; }
@@ -69,7 +67,7 @@
   a:hover { text-decoration: underline; }
   img { max-width: 100%; height: auto; border-style: none; vertical-align: middle; }
 
-  /* ====== CONTENEDOR + GRID MÍNIMO (solo lo necesario para el pliegue) ====== */
+  /* ====== CONTENEDOR + GRID MÍNIMO ====== */
   .container { width:100%; margin:0 auto; padding: 0 12px; }
   @media (min-width: 576px){ .container{ max-width: 540px; } }
   @media (min-width: 768px){ .container{ max-width: 720px; } }
@@ -80,18 +78,15 @@
   .col-6 { flex:0 0 50%; max-width:50%; padding:0 12px; }
   .col-12 { flex:0 0 100%; max-width:100%; padding:0 12px; }
 
-  /* ====== BOTONES (primarios/links que suelen aparecer en hero) ====== */
-  .btn {
-    display:inline-block; padding:.6rem 1.1rem; font-weight:600; line-height:1.2;
-    border:1px solid transparent; border-radius:.25rem; cursor:pointer; text-align:center;
-  }
+  /* ====== BOTONES ====== */
+  .btn { display:inline-block; padding:.6rem 1.1rem; font-weight:600; line-height:1.2; border:1px solid transparent; border-radius:.25rem; cursor:pointer; text-align:center; }
   .btn:focus { outline: none; }
   .btn-primary { background:#d7bd60; border-color:#d7bd60; color:#111; }
   .btn-primary:hover { filter: brightness(.95); }
   .btn-outline { background:transparent; border-color:#d7bd60; color:#d7bd60; }
   .btn-outline:hover { background:#d7bd60; color:#111; }
 
-  /* ====== CABECERA BÁSICA (logo + navegación + utilitarios) ====== */
+  /* ====== CABECERA ====== */
   header, .tt-stuck-nav { background:#fff; color:#111; }
   .header-top { font-size:.9rem; background:#f7f7f7; color:#333; }
   .header-top a { color: inherit; text-decoration:none; }
@@ -99,37 +94,27 @@
   .tt-header-holder { position:relative; z-index:10; }
   .tt-logo img { display:block; height:auto; max-height:56px; }
 
-  /* Navegación de escritorio simple (puede ajustarse a tu markup real) */
   .tt-desctop-menu { display:flex; align-items:center; gap: 20px; }
   .tt-desctop-menu a { color:#111; font-weight:500; }
   .tt-desctop-menu a:hover { color:#d7bd60; }
 
-  /* ====== BUSCADOR EN HEADER (frecuente en Wokiee) ====== */
+  /* ====== BUSCADOR HEADER ====== */
   .tt-search { position:relative; }
   .tt-search .tt-dropdown-menu { position:relative; }
-  .tt-search .tt-dropdown-menu form {
-    display:flex; align-items:center; gap:8px; width:100%;
-  }
+  .tt-search .tt-dropdown-menu form { display:flex; align-items:center; gap:8px; width:100%; }
   .tt-search .tt-search-input {
-    width: calc(80% - 40px);
-    min-height: 40px;
-    padding: 8px 12px;
+    width: calc(80% - 40px); min-height: 40px; padding: 8px 12px;
     border:1px solid #ddd; border-radius:4px;
   }
   .tt-search button[type="submit"] {
-    min-height: 40px;
-    padding: 0 14px;
-    border: 1px solid #d7bd60; border-radius:4px;
+    min-height: 40px; padding: 0 14px; border: 1px solid #d7bd60; border-radius:4px;
     background:#d7bd60; color:#111; font-weight:600;
   }
 
-  /* ====== BARRA PEGADA (si el tema fija la nav al hacer scroll) ====== */
-  .tt-stuck-nav {
-    position: sticky; top: 0; left:0; right:0;
-    box-shadow: 0 2px 8px rgba(0,0,0,.05);
-  }
+  /* ====== NAV PEGADA ====== */
+  .tt-stuck-nav { position: sticky; top: 0; left:0; right:0; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
 
-  /* ====== HERO/MÁSTHEAD BÁSICO (primer bloque visible) ====== */
+  /* ====== HERO ====== */
   .hero, .tt-promo-fullwidth, .banner--hero {
     position:relative; display:flex; align-items:center; min-height: 48vh;
     background-position:center; background-size:cover; background-repeat:no-repeat;
@@ -138,71 +123,48 @@
   .hero h1 { font-size: clamp(28px, 4vw, 44px); margin-bottom: .5rem; }
   .hero p.lead { font-size: clamp(16px, 2vw, 20px); color:#444; margin-bottom: 1rem; }
 
-  /* ====== PRECIO RÁPIDO (si aparece en primer viewport) ====== */
+  /* ====== PRECIO ====== */
   span.money { color:#111; font-weight:700; }
   span.moneyCompare { color:#888; text-decoration: line-through; }
 
-  /* ====== UTILIDADES QUE EVITAN SALTOS (CLS) ====== */
+  /* ====== CLS helpers ====== */
   [hidden]{ display:none !important; }
-  img[loading="lazy"] { min-height:1px; } /* previene colapsos si no hay dims */
+  img[loading="lazy"] { min-height:1px; }
   .lazy-image { display:block; min-height: 1px; }
   .placeholder-rect { background:#f1f1f1; }
 
-  /* ====== RESPONSIVE QUICK TWEAKS ====== */
   @media (max-width: 991px){
-    .tt-desctop-menu { display:none; } /* menú móvil toma control con JS/CSS diferidos */
+    .tt-desctop-menu { display:none; }
     .tt-logo img { max-height:48px; }
     .hero, .tt-promo-fullwidth, .banner--hero { min-height: 40vh; }
   }
 
-  /* Mantén altura/anchura de la “slot” de precio para que no salte */
-  .boost-sd__product-price-content,
-  .price, .tt-price { 
-    display: inline-block;
-    min-height: 1.4em;        /* reserva vertical */
-    min-width: 4.5ch;         /* reserva horizontal (ancho de “$ 0.00”) */
+  .boost-sd__product-price-content, .price, .tt-price { 
+    display: inline-block; min-height: 1.4em; min-width: 4.5ch;
   }
 
-  /* Ocultar sin colapsar el flujo */
-  .boost-sd__format-currency.is-zero{
-    visibility: hidden;       /* mantiene el espacio → no hay CLS */
-    /* opcional: color:transparent; */
-  }
-
+  .boost-sd__format-currency.is-zero{ visibility: hidden; }
 </style>
 
 {%- comment -%} Preconnect: solo lo esencial (≤4) {%- endcomment -%}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-{%- comment -%} Carga NO bloqueante con CSS2 (1 sola hoja); display=swap {%- endcomment -%}
+{%- comment -%} Google Fonts CSS2 no bloqueante {%- endcomment -%}
 <link rel="preload" as="style"
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap"
       onload="this.onload=null;this.rel='stylesheet'">
-<noscript>
-  <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap">
-</noscript>
-
-{%- comment -%}
-Si tienes 2 familias, combínalas en una sola llamada CSS2 para evitar encadenados:
-https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Inter:wght@400;600&display=swap
-{%- endcomment -%}
-
-{%- comment -%} (Opcional) Preconnect candidato si lo usas muy temprano {%- endcomment -%}
-{%- comment -%} <link rel="preconnect" href="https://salespop.conversionbear.com"> {%- endcomment -%}
-
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap"></noscript>
 
 {%- comment -%} CSS base (estructura) con preload + onload {%- endcomment -%}
 <link rel="preload" as="style" href="{{ 'core.css' | asset_url }}" onload="this.onload=null;this.rel='stylesheet'">
 <link rel="preload" as="style" href="{{ 'grid.css' | asset_url }}" onload="this.onload=null;this.rel='stylesheet'">
-
 <noscript>
   <link rel="stylesheet" href="{{ 'core.css'  | asset_url }}">
   <link rel="stylesheet" href="{{ 'grid.css'  | asset_url }}">
 </noscript>
 
-{%- comment -%} CSS no crítico (componentes y páginas) → print hack {%- endcomment -%}
+{%- comment -%} CSS no crítico → print hack {%- endcomment -%}
 <link rel="stylesheet" href="{{ 'components.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'pages.css'      | asset_url }}" media="print" onload="this.media='all'">
 <noscript>
@@ -215,45 +177,36 @@ https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Inter:wght
 <noscript><link rel="stylesheet" href="{{ 'style-rtl.css' | asset_url }}"></noscript>
 {%- endif -%}
 
+<!-- jQuery local (defer) -->
 <script src="{{ 'jquery.min.js' | asset_url }}" defer></script>
 
-  <!-- Shopify injects (apps, storefront, etc.) -->
-  {% render 'boost-sd-fallback' %}
-  {{ content_for_header }}
+<!-- Shopify injects (apps, storefront, etc.) -->
+{% render 'boost-sd-fallback' %}
+{{ content_for_header }}
 
-  {%- unless settings.show_emptyreview -%}
-  <style>
-    [data-rating="0.0"]{ display:none !important; }
-  </style>
-  {%- endunless -%}
+{%- unless settings.show_emptyreview -%}
+<style>[data-rating="0.0"]{ display:none !important; }</style>
+{%- endunless -%}
 
-  <!-- ======= ANALYTICS ======= -->
-  <!-- OPTIM: Usa SOLO 1 GTM para evitar eventos duplicados. Mantengo GTM-M9QVPXNJ. -->
-  <!-- Google Tag Manager (GTM-M9QVPXNJ) -->
-  <script>
-  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});
-   var f=d.getElementsByTagName(s)[0], j=d.createElement(s), dl=l!='dataLayer'?'&l='+l:'';
-   j.async=true; j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl; f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-M9QVPXNJ');
-  </script>
-  <!-- End Google Tag Manager -->
+<!-- ======= Google Tag Manager: mover a idle para reducir TBT ======= -->
+<script>
+(function(w,d,s,l,i){
+  function start(){
+    w[l]=w[l]||[]; w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+    var f=d.getElementsByTagName(s)[0], j=d.createElement(s), dl=l!='dataLayer' ? '&l='+l : '';
+    j.async=1; j.defer=1; j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+    f.parentNode.insertBefore(j,f);
+  }
+  if ('requestIdleCallback' in window) requestIdleCallback(start, {timeout:1500});
+  else setTimeout(start, 1000);
+})(window,document,'script','dataLayer','GTM-M9QVPXNJ');
+</script>
+<!-- ======= /GTM ======= -->
 
-  <!-- OPTIM: GTM duplicado (comentado). Si lo necesitas, avísame para consolidar triggers. -->
-  {%- comment -%}
-  <!-- Google Tag Manager (GTM-53RX83T) [DESACTIVADO PARA EVITAR DUPLICADOS] -->
-  <script>
-  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});
-   var f=d.getElementsByTagName(s)[0], j=d.createElement(s), dl=l!='dataLayer'?'&l='+l:'';
-   j.async=true; j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl; f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-53RX83T');
-  </script>
-  {%- endcomment -%}
-  <!-- ========================= -->
-
-  <style>
-    button.slick-arrow { z-index: 99999 !important; }
-    button.tt-btn-zomm.tt-top-right.tt-btn-zomm-product-page { display: none; }
-  </style>
+<style>
+  button.slick-arrow { z-index: 99999 !important; }
+  button.tt-btn-zomm.tt-top-right.tt-btn-zomm-product-page { display: none; }
+</style>
 
 </head>
 <body class="page{{ template }}"
@@ -262,8 +215,7 @@ https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Inter:wght
       {% if request.design_mode %} data-supportcode="{{ settings.supportcode }}"{% endif %}>
 
   <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M9QVPXNJ"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M9QVPXNJ" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
 
   {%- if settings.show_helper -%}{%- section "show-helper" -%}{%- endif -%}
@@ -318,7 +270,7 @@ https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Inter:wght
   {%- if settings.show_footer_instagram_section -%}
     {%- section "footer-section-instagram" -%}
   {%- endif -%}
-  {%- if settings.show_back_to_top_button -%}<a href="#" class="tt-back-to-top">{{ 'general.general.to_top_button' | t }}</a>{% endif %}
+  {%- if settings.show_back_to_top_button -%}<a href="#" class="tt-back-to-top">{{ 'general.general.to_top_button' | t }}</a>{% endif -%}
   {%- if settings.product_item_show_quickview -%}
     {%- if content_for_layout contains 'data-target="#ModalquickView"' or content_for_layout contains "index_sectiontabs" or template contains "product" -%}{%- include "modal-quickview" -%}
     {%- elsif template == "index" and settings.home_page_layout == 'home-page_layout-2' -%}{%- include "modal-quickview" -%}
@@ -386,6 +338,18 @@ https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Inter:wght
   {%- include 'modal-wishlist-alert' -%}
   {%- section "promo-fixed" -%}
 
+  {%- comment -%} ====== Slider Revolution: cargar SOLO si está presente en la página ====== {%- endcomment -%}
+  {%- assign uses_rev = false -%}
+  {%- if content_for_layout contains 'rev_slider' or content_for_layout contains 'tp-revslider-mainul' -%}{% assign uses_rev = true %}{%- endif -%}
+  {%- if template == 'index' and uses_rev -%}
+    <script defer src="{{ 'jquery.themepunch.revolution_full.min.js' | asset_url }}"></script>
+    {%- comment -%} Si tienes CSS propio de Revolution, hazlo no-bloqueante igual que el resto {%- endcomment -%}
+    {%- if 'revolution.css' | asset_url -%}
+      <link rel="preload" as="style" href="{{ 'revolution.css' | asset_url }}" onload="this.onload=null;this.rel='stylesheet'">
+      <noscript><link rel="stylesheet" href="{{ 'revolution.css' | asset_url }}"></noscript>
+    {%- endif -%}
+  {%- endif -%}
+
   {%- if settings.all_links_is_external or settings.menu_links_is_external or settings.external_links_is_external -%}
   <script defer>
     window.addEventListener('DOMContentLoaded', function() {
@@ -404,39 +368,62 @@ https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Inter:wght
 
   {{ settings.some_code_field }}
 
-  <!-- ====== JS de clientes Shopify SOLO en vistas de cliente, ahora con defer y en footer ====== -->
+  <!-- ====== JS de clientes Shopify SOLO en vistas de cliente, defer ====== -->
   {%- if template contains 'customers' -%}
     {{ 'shopify_common.js' | shopify_asset_url | script_tag | replace: '<script ', '<script defer ' | remove: ' type="text/javascript"' }}
     {{ 'customer_area.js'  | shopify_asset_url | script_tag | replace: '<script ', '<script defer ' | remove: ' type="text/javascript"' }}
   {%- endif -%}
 
-  <!-- ====== Script personalizado (convertido a Vanilla JS para no depender de jQuery) ====== -->
+  <!-- ====== Script personalizado (Vanilla) ====== -->
   <script defer>
-(function(){
-  function markZeroPrices(){
-    document.querySelectorAll(".boost-sd__format-currency").forEach(function(el){
-      var txt = (el.textContent || '').replace(/\s/g,'');
-      if (txt === '$0' || txt === '$0.00' || txt === '$0,00') {
-        el.classList.add('is-zero');
-      }
+  (function(){
+    function markZeroPrices(){
+      document.querySelectorAll(".boost-sd__format-currency").forEach(function(el){
+        var txt = (el.textContent || '').replace(/\s/g,'');
+        if (txt === '$0' || txt === '$0.00' || txt === '$0,00') {
+          el.classList.add('is-zero');
+        }
+      });
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', markZeroPrices);
+    } else { markZeroPrices(); }
+    document.addEventListener('boost:updated', markZeroPrices);
+  })();
+  </script>
+
+  <!-- ====== Loader de terceros (reduce TBT) ====== -->
+  <script>
+  (function(){
+    function onIdle(fn){ 'requestIdleCallback' in window ? requestIdleCallback(fn,{timeout:3000}) : setTimeout(fn,1200); }
+    function onFirstInput(fn){
+      var done=false; function wrap(){ if(done) return; done=true; fn(); }
+      ['pointerdown','keydown','wheel','touchstart'].forEach(function(e){ addEventListener(e, wrap, {once:true, passive:true}); });
+      setTimeout(wrap, 4000); // fallback
+    }
+    function loadJS(src, attrs){
+      return new Promise(function(res,rej){
+        var s=document.createElement('script'); s.src=src; s.async=1; s.defer=1;
+        if(attrs) for (var k in attrs) s.setAttribute(k, attrs[k]);
+        s.onload=res; s.onerror=rej; document.head.appendChild(s);
+      });
+    }
+
+    // Clarity → idle
+    onIdle(function(){ loadJS('https://www.clarity.ms/tag/o8urjbd8xg'); });
+
+    // Otros widgets → al primer input (descomenta los que uses)
+    onFirstInput(function(){
+      // Reputon
+      // loadJS('https://cdn.gnw.reputon.com/assets/widget.js?shop={{ shop.permanent_domain }}');
+      // SalesPop
+      // loadJS('https://cdn.shopify.com/s/files/1/0000/0000/t/0/assets/salespop-widget.js');
+      // Chaty
+      // loadJS('https://cdn.chaty.app/pixel.js?id=SaFsvROS&shop={{ shop.permanent_domain }}');
+      // Facebook Pixel (si no necesitas disparo inmediato)
+      // loadJS('https://connect.facebook.net/en_US/fbevents.js');
     });
-  }
-  // Ejecuta una vez listo el DOM y reejecuta tras filtros/boost
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', markZeroPrices);
-  } else { markZeroPrices(); }
-  document.addEventListener('boost:updated', markZeroPrices); // si Boost emite evento — si no, puedes usar MutationObserver
-})();
-</script>
-
-
-  <!-- ====== Microsoft Clarity (movido al final para no bloquear) ====== -->
-  <script defer>
-    (function(c,l,a,r,i,t,y){
-      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "o8urjbd8xg");
+  })();
   </script>
 
   <!-- ====== Estilos inline (se conservan) ====== -->
