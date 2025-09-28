@@ -32,32 +32,34 @@
                 Calculamos "sizes" en función de las columnas configuradas (grid: "X.Y")
               {%- endcomment -%}
               {%- assign img_cols = item.grid | split: '.' | first | plus: 0 -%}
-              {%- capture sizes_attr -%}
-                {% if img_cols >= 10 %}
-                  (min-width:1025px) 83vw, 100vw
-                {% elsif img_cols >= 8 %}
-                  (min-width:1025px) 66vw, 100vw
-                {% elsif img_cols >= 6 %}
-                  (min-width:1025px) 50vw, 100vw
-                {% elsif img_cols >= 4 %}
-                  (min-width:1025px) 33vw, 100vw
-                {% else %}
-                  (min-width:1025px) 25vw, 100vw
-                {% endif %}
-              {%- endcapture -%}
-              {%- assign widths_img = "320,480,640,828,1200,1600" -%}
+                {%- capture sizes_attr -%}
+                  {% if img_cols >= 10 %}
+                    (min-width:1025px) 83vw, 100vw
+                  {% elsif img_cols >= 8 %}
+                    (min-width:1025px) 66vw, 100vw
+                  {% elsif img_cols >= 6 %}
+                    (min-width:1025px) 50vw, 100vw
+                  {% elsif img_cols >= 4 %}
+                    (min-width:1025px) 33vw, 100vw
+                  {% else %}
+                    (min-width:1025px) 25vw, 100vw
+                  {% endif %}
+                {%- endcapture -%}
+                {%- assign sizes_clean = sizes_attr | strip -%}
+                {%- assign widths_img = "320,480,640,828,1200,1600" -%}
 
-              {{ item.image
-                | image_url: width: 1600
-                | image_tag:
-                    widths: widths_img,
-                    sizes: sizes_attr | strip,
-                    loading: "eager",
-                    fetchpriority: "high",
-                    decoding: "async",
-                    class: "section-main-image",
-                    alt: item.image.alt | default: item.text1 | default: shop.name | escape
-              }}
+                {{ item.image
+                  | image_url: width: 1600
+                  | image_tag:
+                      widths: widths_img,
+                      sizes: sizes_clean,
+                      loading: 'eager',
+                      fetchpriority: 'high',
+                      decoding: 'async',
+                      class: 'section-main-image',
+                      alt: item.image.alt | default: item.text1 | default: shop.name | escape
+                }}
+
             {%- endif -%}
           {% endif %}
 
