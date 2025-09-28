@@ -175,7 +175,6 @@ gap:20px;
 }
 @media only screen and (max-width:600px){
   .bannerHome img {
-    height: 250px !important;
     width: auto !important;
     text-align: center;
     margin:0px !important;
