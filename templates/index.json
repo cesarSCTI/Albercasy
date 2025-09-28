@@ -608,7 +608,7 @@
           "settings": {
             "use_main_bg_color": false,
             "main_bg_color": "#f7f8fa",
-            "image": "shopify://shop_images/Baner_extra_2.png",
+            "image": "shopify://shop_images/Baner_extra_2.jpg",
             "responsivepoint_image": "768",
             "use_link": true,
             "link": "shopify://collections/bombas-de-calor",
@@ -698,7 +698,7 @@
           "settings": {
             "use_main_bg_color": false,
             "main_bg_color": "#f7f8fa",
-            "image": "shopify://shop_images/Baner_extra_3.png",
+            "image": "shopify://shop_images/Baner_extra_3.jpg",
             "responsivepoint_image": "668",
             "use_link": true,
             "link": "shopify://collections/robot-de-limpieza",
@@ -788,7 +788,7 @@
           "settings": {
             "use_main_bg_color": false,
             "main_bg_color": "#f7f8fa",
-            "image": "shopify://shop_images/Baner_extra_1_copy.png",
+            "image": "shopify://shop_images/Baner_extra_1_copy.jpg",
             "responsivepoint_image": "668",
             "use_link": true,
             "link": "shopify://collections/automatizacion",
@@ -1164,7 +1164,7 @@
           "settings": {
             "use_main_bg_color": false,
             "main_bg_color": "#f7f8fa",
-            "image": "shopify://shop_images/Paneles_solares.png",
+            "image": "shopify://shop_images/Paneles_solares.jpg",
             "responsivepoint_image": "768",
             "use_link": true,
             "link": "shopify://collections/calentamiento-solar",
@@ -1254,7 +1254,7 @@
           "settings": {
             "use_main_bg_color": false,
             "main_bg_color": "#f7f8fa",
-            "image": "shopify://shop_images/calentamiento_a_2beeda11-5d46-43c0-acfe-888a2c394594.png",
+            "image": "shopify://shop_images/calentamiento.jpg",
             "responsivepoint_image": "768",
             "use_link": true,
             "link": "shopify://collections/calentamiento-de-albercas",
@@ -1344,7 +1344,7 @@
           "settings": {
             "use_main_bg_color": false,
             "main_bg_color": "#f7f8fa",
-            "image": "shopify://shop_images/Recubrimiento.png",
+            "image": "shopify://shop_images/Recubrimiento.jpg",
             "responsivepoint_image": "768",
             "use_link": true,
             "link": "shopify://collections/recubrimiento",
@@ -1434,7 +1434,7 @@
           "settings": {
             "use_main_bg_color": false,
             "main_bg_color": "#f7f8fa",
-            "image": "shopify://shop_images/Tinas_hidromasaje.png",
+            "image": "shopify://shop_images/Tinas_hidromasaje.jpg",
             "responsivepoint_image": "768",
             "use_link": true,
             "link": "shopify://collections/tinas-de-hidromasaje-spa",
@@ -1524,7 +1524,7 @@
           "settings": {
             "use_main_bg_color": false,
             "main_bg_color": "#f7f8fa",
-            "image": "shopify://shop_images/Motobombas_04629872-cce4-487f-9878-875755162651.png",
+            "image": "shopify://shop_images/Motobombas_04629872-cce4-487f-9878-875755162651.jpg",
             "responsivepoint_image": "768",
             "use_link": true,
             "link": "shopify://collections/motobombas",
@@ -1614,7 +1614,7 @@
           "settings": {
             "use_main_bg_color": false,
             "main_bg_color": "#f7f8fa",
-            "image": "shopify://shop_images/Generadores_c9cba176-6a84-4532-b21f-1a38ba841b37.png",
+            "image": "shopify://shop_images/Generadores_c9cba176-6a84-4532-b21f-1a38ba841b37.jpg",
             "responsivepoint_image": "768",
             "use_link": true,
             "link": "shopify://collections/generadores",
