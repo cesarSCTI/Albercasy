@@ -144,6 +144,133 @@
   }
 
   .boost-sd__format-currency.is-zero{ visibility: hidden; }
+  /* ===== HOME ONLY (Shopify) ===== */
+body.template-index {
+  /* Usa sistema para reducir bloqueo por webfonts (puedes quitar si necesitas tu tipografía) */
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+/* Header estable: evita CLS por cambio de altura en sticky */
+body.template-index .site-header,
+body.template-index header[role="banner"] {
+  min-height: 64px;
+  contain: layout paint; /* menos reflows cuando cambia el menú */
+}
+
+/* HERO de portada: reserva espacio y evita parpadeo */
+body.template-index .layout-box01-wrapper {
+  position: relative;
+  overflow: hidden;
+  /* reserva de relación (ajusta 16/9 o 21/9 según tu creatividad) */
+  aspect-ratio: 16/9;
+  background-color: #f6f6f6; /* color neutro para evitar flash en carga */
+}
+
+/* Si el hero usa <img> absoluto tipo "cover" */
+body.template-index .layout-box01-wrapper > img,
+body.template-index .layout-box01-wrapper > picture > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;           /* emula background-size: cover */
+  object-position: center;     /* puedes cambiar a top|bottom según diseño */
+  transform: translateZ(0);    /* acelera compositing */
+}
+
+/* Botones above-fold: transiciones cortas y baratas */
+body.template-index .btn,
+body.template-index a.button,
+body.template-index .tt-btn,
+body.template-index .shopify-payment-button__button {
+  transition: transform .15s ease, opacity .15s ease;
+  will-change: transform;
+}
+body.template-index .btn:hover,
+body.template-index a.button:hover,
+body.template-index .tt-btn:hover {
+  transform: translateY(-1px);
+}
+
+/* Mensajes/Badges (OFERTA, etc.) sin sombras pesadas */
+body.template-index .badge,
+body.template-index [class*="badge"],
+body.template-index .sale-badge {
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+/* ===== Producto destacado / carruseles del home ===== */
+
+/* Contenedor de imagen: bloque y relación cuadrada para evitar CLS */
+body.template-index .product-card__image,
+body.template-index .product-item__image,
+body.template-index .boost-sd__product-item .boost-sd__image-wrapper,
+body.template-index [class*="product"] .media,
+body.template-index .grid__item .media {
+  aspect-ratio: 1/1;           /* ajusta a 4/3 si tus fotos son rectangulares */
+  background-color: #f2f2f2;   /* placeholder */
+  overflow: hidden;
+}
+
+/* Imágenes dentro de tarjetas: ocupan todo el wrapper */
+body.template-index .product-card__image img,
+body.template-index .product-item__image img,
+body.template-index .boost-sd__product-item img,
+body.template-index [class*="product"] .media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;               /* elimina gaps en inline images */
+}
+
+/* Prevenir saltos por precio/título */
+body.template-index .product-card__title,
+body.template-index .product-item__title,
+body.template-index .boost-sd__product-title {
+  min-height: 2.6em;           /* reserva 2 líneas aprox. */
+}
+body.template-index .price,
+body.template-index .product-card__price {
+  min-height: 1.4em;           /* espacio reservado para precio */
+}
+
+/* Carruseles: animar solo con transform/opacity (no layout) */
+body.template-index .slick-track,
+body.template-index .swiper-wrapper {
+  will-change: transform;
+}
+body.template-index .slick-slide,
+body.template-index .swiper-slide {
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* ===== Imágenes genéricas: reglas seguras ===== */
+body.template-index img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ===== Menos trabajo en el main thread ===== */
+@media (prefers-reduced-motion: reduce) {
+  body.template-index * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Parallax/desenfoques (si el tema los usa) → desactivados en home */
+body.template-index .parallax,
+body.template-index .jarallax,
+body.template-index [class*="parallax"] {
+  background-attachment: scroll !important;
+  transform: none !important;
+  filter: none !important;
+}
+
 </style>
 
 {%- comment -%} Preconnect: solo lo esencial (≤4) {%- endcomment -%}
