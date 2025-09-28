@@ -171,40 +171,32 @@
 
 </style>
 
-{%- comment -%} === Google Fonts sin bloqueo === {%- endcomment -%}
+{%- comment -%} Preconnect: solo lo esencial (≤4) {%- endcomment -%}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-{%- if settings.font1_is_gsoogle_font -%}
+{%- comment -%} Carga NO bloqueante con CSS2 (1 sola hoja); display=swap {%- endcomment -%}
 <link rel="preload" as="style"
-      href="https://fonts.googleapis.com/css?family={{ settings.font_name1 }}:100,200,300,400,500,600,700,800,900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap"
       onload="this.onload=null;this.rel='stylesheet'">
 <noscript>
   <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family={{ settings.font_name1 }}:100,200,300,400,500,600,700,800,900&display=swap">
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap">
 </noscript>
-{%- endif -%}
 
-{%- if settings.font_name1 != settings.font_name2 and settings.font_name2 != '' and settings.font2_is_google_font -%}
-<link rel="preload" as="style"
-      href="https://fonts.googleapis.com/css?family={{ settings.font_name2 }}:100,200,300,400,500,600,700,800,900&display=swap"
-      onload="this.onload=null;this.rel='stylesheet'">
-<noscript>
-  <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family={{ settings.font_name2 }}:100,200,300,400,500,600,700,800,900&display=swap">
-</noscript>
-{%- endif -%}
+{%- comment -%}
+Si tienes 2 familias, combínalas en una sola llamada CSS2 para evitar encadenados:
+https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Inter:wght@400;600&display=swap
+{%- endcomment -%}
 
-{%- if settings.popup_newsletter_show and settings.use_as_simple_popup and settings.popup_simple_fonts != "" -%}
-{{ settings.popup_simple_fonts }}
-{%- endif -%}
+{%- comment -%} (Opcional) Preconnect candidato si lo usas muy temprano {%- endcomment -%}
+{%- comment -%} <link rel="preconnect" href="https://salespop.conversionbear.com"> {%- endcomment -%}
 
-{%- comment -%} Si settings.google_font_links trae un <link rel="stylesheet">, idealmente reescribir a preload+onload {%- endcomment -%}
-{{ settings.google_font_links | replace: 'rel="stylesheet"', 'rel="preload" as="style" onload="this.onload=null;this.rel=\'stylesheet\'"' }}
 
 {%- comment -%} CSS base (estructura) con preload + onload {%- endcomment -%}
 <link rel="preload" as="style" href="{{ 'core.css' | asset_url }}" onload="this.onload=null;this.rel='stylesheet'">
 <link rel="preload" as="style" href="{{ 'grid.css' | asset_url }}" onload="this.onload=null;this.rel='stylesheet'">
+
 <noscript>
   <link rel="stylesheet" href="{{ 'core.css'  | asset_url }}">
   <link rel="stylesheet" href="{{ 'grid.css'  | asset_url }}">
