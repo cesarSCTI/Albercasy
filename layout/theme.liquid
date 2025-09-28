@@ -190,7 +190,7 @@
 <style>[data-rating="0.0"]{ display:none !important; }</style>
 {%- endunless -%}
 
-<!-- ======= Google Tag Manager: mover a idle para reducir TBT ======= -->
+<!-- ======= Google Tag Manager: mover a idle para reducir TBT ======= 
 <script>
 (function(w,d,s,l,i){
   function start(){
@@ -203,7 +203,7 @@
   else setTimeout(start, 1000);
 })(window,document,'script','dataLayer','GTM-M9QVPXNJ');
 </script>
-<!-- ======= /GTM ======= -->
+======= /GTM ======= -->
 
 <style>
   button.slick-arrow { z-index: 99999 !important; }
@@ -216,9 +216,9 @@
       id="same_product_height"{% if settings.notsamewidth %} data-type="not_same_width"{% endif %}{% endif %}
       {% if request.design_mode %} data-supportcode="{{ settings.supportcode }}"{% endif %}>
 
-  <!-- Google Tag Manager (noscript) -->
+  <!-- Google Tag Manager (noscript) 
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M9QVPXNJ" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
+   End Google Tag Manager (noscript) -->
 
   {%- if settings.show_helper -%}{%- section "show-helper" -%}{%- endif -%}
   {%- if settings.show_preloader -%}{%- include "main-loader" -%}{%- endif -%}
