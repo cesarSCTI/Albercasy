@@ -156,7 +156,7 @@
       onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap"></noscript>
 
-{{ 'theme.css' | asset_url | stylesheet_tag: media: 'print', onload: "this.media='all'" }}
+{{ 'theme.css' | asset_url | stylesheet_tag}}
 
 {%- comment -%} CSS no crítico → print hack
  <link rel="stylesheet" href="{{ 'core.css' | asset_url }}" media="print" onload="this.media='all'">
