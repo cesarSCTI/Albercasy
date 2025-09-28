@@ -1802,16 +1802,34 @@
         "backgroundminheight1": "200"
       }
     },
-    "9b5c59d8-2a0b-4175-9098-a89dbb485e61": {
-      "type": "index-section-custom_html",
+    "section_image_custom_qaBKF7": {
+      "type": "section-image-custom",
+      "blocks": {
+        "image_9hrtFm": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/img-google-review-min.png",
+            "image_height_tamano": 100,
+            "animation_image_section": "",
+            "time_animation_image_section": 500,
+            "delay_time_animation_image_section": 500
+          }
+        }
+      },
+      "block_order": [
+        "image_9hrtFm"
+      ],
+      "name": "image text BW",
       "settings": {
-        "topoffset": true,
-        "fullwidth": false,
-        "fullwidth2": false,
-        "data": "<center>\n<img src=\"https://cdn.shopify.com/s/files/1/0766/7813/6126/files/img-google-review-min.png?v=1687634480\" height=\"100\">\n<h6 style=\"margin-top:20px;\">\n\n</h6>\n</center>",
-        "usebgcolor": false,
-        "usebgcolorfullwidth": false,
-        "bgco": "#ffffff"
+        "width_text_section": 100,
+        "width_image_section": 100,
+        "padding-top": 30,
+        "padding-bottom": 0,
+        "align-items-text": "flex-start",
+        "align-items-image": "center",
+        "space_between": 15,
+        "bg-position": "top",
+        "bg-color": ""
       }
     },
     "1688077356e5cdf75e": {
@@ -1990,7 +2008,7 @@
     "b3a378ec-a00e-44df-b998-0b11b60cf367",
     "dd3e65bd-0d34-423d-b014-e763fa309a64",
     "56ce5043-58ae-4c96-a35e-91e24ccdb784",
-    "9b5c59d8-2a0b-4175-9098-a89dbb485e61",
+    "section_image_custom_qaBKF7",
     "1688077356e5cdf75e",
     "18fa1c5e-c40e-4145-982f-dc2e5aefc645",
     "c5dbbf68-561d-448a-8733-1eb2da9b41d9",
