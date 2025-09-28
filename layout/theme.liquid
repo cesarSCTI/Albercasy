@@ -158,18 +158,19 @@
 
 {%- comment -%} CSS no crítico → print hack {%- endcomment -%}
 <link rel="stylesheet" href="{{ 'components.css' | asset_url }}" media="print" onload="this.media='all'">
-<link rel="stylesheet" href="{{ 'pages.css'      | asset_url }}" media="print" onload="this.media='all'">
-<noscript>
-  <link rel="stylesheet" href="{{ 'components.css' | asset_url }}">
-  <link rel="stylesheet" href="{{ 'pages.css'      | asset_url }}">
-</noscript>
+<link rel="stylesheet" href="{{ 'grid.css'       | asset_url }}" media="print" onload="this.media='all'">
 
 {%- comment -%} CSS base (estructura) con preload + onload {%- endcomment -%}
 <link rel="preload" as="style" href="{{ 'core.css' | asset_url }}" onload="this.onload=null;this.rel='stylesheet'">
-<link rel="preload" as="style" href="{{ 'grid.css' | asset_url }}" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="preload" href="{{ 'pages.css' | asset_url }}" onload="this.onload=null;this.rel='stylesheet'">
+
 <noscript>
-  <link rel="stylesheet" href="{{ 'core.css'  | asset_url }}">
+
+  <link rel="stylesheet" href="{{ 'components.css' | asset_url }}">
   <link rel="stylesheet" href="{{ 'grid.css'  | asset_url }}">
+  <link rel="stylesheet" href="{{ 'pages.css'      | asset_url }}">
+  <link rel="stylesheet" href="{{ 'core.css'  | asset_url }}">
+
 </noscript>
 
 
