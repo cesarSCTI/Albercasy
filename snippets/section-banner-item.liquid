@@ -56,22 +56,92 @@
      {% if b_i.use_link %} data-linkto="{{ b_i.link }}"{% endif %}>
 {% endif %}
 
-  {%- if b_i.image == blank -%}{%- include "get_svg" type:'image' size:info_image_size -%}
+    {%- if b_i.image == blank -%}
+    {%- include "get_svg" type:'image' size:info_image_size -%}
   {%- else -%}
-  {%- assign scale_numbers = '_' | append: img_size -%}
-    <img class="lazyload promoimagemain"
-         data-mainimageratio = '{{ b_i.image.aspect_ratio }}'
-         data-mainimage="{{ b_i.image | img_url: '100x100' | replace: '100x100', 'respimgsize' }}"
-         data-width="{{ b_i.image.width }}"
-         alt="{{ b_i.image.alt }}">
-  {%- if b_i.image2 != blank -%}
-    <img class="lazyload promoimagemobile"
-         data-mainimageratio = '{{ b_i.image2.aspect_ratio }}'
-         data-mainimage="{{ b_i.image2 | img_url: '100x100' | replace: '100x100', 'respimgsize' }}"
-         data-width="{{ b_i.image2.width }}"
-         alt="{{ b_i.image2.alt }}">
+    {%- comment -%}
+      ===== Responsive images optimizadas =====
+      - picture con AVIF/WEBP/JPG
+      - srcset + sizes (ajusta el “vw” si tus tarjetas ocupan otro ancho)
+      - width/height para evitar CLS
+      - fetchpriority=high sólo para el primer promo en Home (LCP)
+    {%- endcomment -%}
+
+    {%- assign sizes_attr = '(max-width: 767px) 92vw, (max-width: 1199px) 45vw, 30vw' -%}
+
+    {%- assign base_w = 1200 -%}
+    {%- if b_i.image.width < base_w -%}{%- assign base_w = b_i.image.width -%}{%- endif -%}
+    {%- assign base_h = base_w | divided_by: b_i.image.aspect_ratio | round -%}
+
+    {%- if template == 'index' and forloop and forloop.first -%}
+      <link rel="preload" as="image"
+            href="{{ b_i.image | image_url: width: 1200, format: 'webp' }}"
+            imagesrcset="
+              {{ b_i.image | image_url: width: 480,  format: 'webp' }} 480w,
+              {{ b_i.image | image_url: width: 768,  format: 'webp' }} 768w,
+              {{ b_i.image | image_url: width: 960,  format: 'webp' }} 960w,
+              {{ b_i.image | image_url: width: 1200, format: 'webp' }} 1200w"
+            imagesizes="{{ sizes_attr }}"
+            fetchpriority="high">
+    {%- endif -%}
+
+    <picture>
+      {%- if b_i.image2 != blank -%}
+        {%- assign m_w = 768 -%}
+        {%- if b_i.image2.width < m_w -%}{%- assign m_w = b_i.image2.width -%}{%- endif -%}
+        {%- assign m_h = m_w | divided_by: b_i.image2.aspect_ratio | round -%}
+
+        <!-- Mobile sources -->
+        <source media="(max-width: 767px)" type="image/avif"
+                srcset="
+                  {{ b_i.image2 | image_url: width: 360, format: 'avif' }} 360w,
+                  {{ b_i.image2 | image_url: width: 480, format: 'avif' }} 480w,
+                  {{ b_i.image2 | image_url: width: 640, format: 'avif' }} 640w,
+                  {{ b_i.image2 | image_url: width: 768, format: 'avif' }} 768w">
+        <source media="(max-width: 767px)" type="image/webp"
+                srcset="
+                  {{ b_i.image2 | image_url: width: 360, format: 'webp' }} 360w,
+                  {{ b_i.image2 | image_url: width: 480, format: 'webp' }} 480w,
+                  {{ b_i.image2 | image_url: width: 640, format: 'webp' }} 640w,
+                  {{ b_i.image2 | image_url: width: 768, format: 'webp' }} 768w">
+        <source media="(max-width: 767px)"
+                srcset="
+                  {{ b_i.image2 | image_url: width: 360, format: 'pjpg' }} 360w,
+                  {{ b_i.image2 | image_url: width: 480, format: 'pjpg' }} 480w,
+                  {{ b_i.image2 | image_url: width: 640, format: 'pjpg' }} 640w,
+                  {{ b_i.image2 | image_url: width: 768, format: 'pjpg' }} 768w">
+      {%- endif -%}
+
+      <!-- Desktop/Tablet sources -->
+      <source type="image/avif"
+              srcset="
+                {{ b_i.image | image_url: width: 480,  format: 'avif' }} 480w,
+                {{ b_i.image | image_url: width: 768,  format: 'avif' }} 768w,
+                {{ b_i.image | image_url: width: 960,  format: 'avif' }} 960w,
+                {{ b_i.image | image_url: width: 1200, format: 'avif' }} 1200w">
+      <source type="image/webp"
+              srcset="
+                {{ b_i.image | image_url: width: 480,  format: 'webp' }} 480w,
+                {{ b_i.image | image_url: width: 768,  format: 'webp' }} 768w,
+                {{ b_i.image | image_url: width: 960,  format: 'webp' }} 960w,
+                {{ b_i.image | image_url: width: 1200, format: 'webp' }} 1200w">
+      <img
+        class="promoimagemain"
+        src="{{ b_i.image | image_url: width: 768, format: 'pjpg' }}"
+        srcset="
+          {{ b_i.image | image_url: width: 480,  format: 'pjpg' }} 480w,
+          {{ b_i.image | image_url: width: 768,  format: 'pjpg' }} 768w,
+          {{ b_i.image | image_url: width: 960,  format: 'pjpg' }} 960w,
+          {{ b_i.image | image_url: width: 1200, format: 'pjpg' }} 1200w"
+        sizes="{{ sizes_attr }}"
+        width="{{ base_w }}" height="{{ base_h }}"
+        alt="{{ b_i.image.alt | escape }}"
+        loading="lazy"
+        decoding="async"
+        fetchpriority="{% if template == 'index' and forloop and forloop.first %}high{% else %}low{% endif %}">
+    </picture>
   {%- endif -%}
-  {%- endif -%}
+
   {% capture ctbtn %}{%- if b_i.show_custom_html and b_i.use_custom_html_below_text == true -%}true{%- else -%}false{%- endif -%}{% endcapture %}
   {%- unless b_i.description_size == 'hide' -%}{%- if b_i.text1 != '' or b_i.text2 != '' or b_i.text3 != '' or b_i.show_icon or ctbtn!= 'false' -%}
   <div class="tt-description {% if b_i.position != 'use_main_position' %}{{ b_i.position }}{% else %}{{ item.position }}{% endif %}">
