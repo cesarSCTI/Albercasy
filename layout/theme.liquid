@@ -473,7 +473,7 @@ body.template-index [class*="parallax"] {
   {%- if template == 'index' and uses_rev -%}
     <script defer src="{{ 'jquery.themepunch.revolution_full.min.js' | asset_url }}"></script>
     {%- comment -%} Si tienes CSS propio de Revolution, hazlo no-bloqueante igual que el resto {%- endcomment -%}
-    {%- if 'revolution.css' | asset_url -%}
+    {%- if 'revolution.css' -%}
       <link rel="preload" as="style" href="{{ 'revolution.css' | asset_url }}" onload="this.onload=null;this.rel='stylesheet'">
       <noscript><link rel="stylesheet" href="{{ 'revolution.css' | asset_url }}"></noscript>
     {%- endif -%}
@@ -569,3 +569,13 @@ body.template-index [class*="parallax"] {
   {% render 'boost-sd-fallback' %}
 </body>
 </html>
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{%- if 'revolution.css' | asset_url -%}"
+  to: "{%- if 'revolution.css' -%}"
+  position: 20753..20780
+{% endcomment %}
