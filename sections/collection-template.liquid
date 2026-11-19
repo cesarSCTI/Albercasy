@@ -1,5 +1,44 @@
-{%- comment -%}
-  The contents of the collection.liquid template can be found in /snippets/collection-template.liquid
-{%- endcomment -%}
+{%- liquid
+  assign page_size = settings.pagination_limit | times: 1
+  assign collection_view = ''
+  assign native_collection = false
+  if template.suffix == blank or template.suffix == 'por-pagina-16' or template.suffix == 'por-pagina-32' or template.suffix == 'por-pagina-50'
+    assign native_collection = true
+    case template.suffix
+      when 'por-pagina-16'
+        assign page_size = 16
+      when 'por-pagina-32'
+        assign page_size = 32
+      when 'por-pagina-50'
+        assign page_size = 50
+    endcase
+    assign collection_view = template.suffix
+  endif
+-%}
 
-{% include 'collection-template' current_pagination_limit: settings.pagination_limit %}
+{% if native_collection %}
+  {{ 'collection-native.css' | asset_url | stylesheet_tag }}
+  <noscript>
+    <style>
+      [data-native-collection] .aside.leftColumn {
+        position: static;
+        visibility: visible;
+        transform: none;
+        width: auto;
+        max-width: 100%;
+        height: auto;
+        overflow: visible;
+      }
+      [data-native-collection] .tt-btn-toggle,
+      [data-native-collection] .aside.leftColumn .tt-btn-col-close { display: none; }
+    </style>
+  </noscript>
+{% endif %}
+
+{% include 'collection-template', current_pagination_limit: page_size %}
+
+{% schema %}
+{
+  "name": "Collection products"
+}
+{% endschema %}

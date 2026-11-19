@@ -1,0 +1,67 @@
+{%- if collection.filters != empty -%}
+  {%- capture active_filters -%}
+    {%- for filter in collection.filters -%}
+      {%- for value in filter.active_values -%}
+        <li><a href="{{ value.url_to_remove | escape }}">{{ 'collections.sidebar.text_remove_parameter' | t }} {{ filter.label | escape }}: {{ value.label | escape }}</a></li>
+      {%- endfor -%}
+      {%- if filter.type == 'price_range' -%}
+        {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
+          {%- assign minimum = filter.min_value.value | default: 0 -%}
+          {%- assign maximum = filter.max_value.value | default: filter.range_max -%}
+          <li><a href="{{ filter.url_to_remove | escape }}">{{ 'collections.sidebar.text_remove_parameter' | t }} {{ filter.label | escape }}: {{ minimum | money }} – {{ maximum | money }}</a></li>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+
+  {% if active_filters != blank %}
+    <div class="collection-native-active">
+      <ul>{{ active_filters }}</ul>
+      {% render 'collection-native-filter-reset', collection: collection, collection_view: collection_view %}
+    </div>
+  {% endif %}
+
+  <form class="collection-native-filters" action="{{ collection.url | escape }}" method="get">
+    <input type="hidden" name="sort_by" value="{{ collection.sort_by | default: collection.default_sort_by | escape }}">
+    {% if collection_view != blank %}
+      <input type="hidden" name="view" value="{{ collection_view | escape }}">
+    {% endif %}
+    {% for filter in collection.filters %}
+      <fieldset>
+        <legend>{{ filter.label | escape }}</legend>
+        {% case filter.type %}
+          {% when 'boolean', 'list' %}
+            {% for value in filter.values %}
+              {% assign swatch_image = value.swatch.image | default: value.image %}
+              <label class="collection-native-value">
+                <input type="checkbox" name="{{ value.param_name | escape }}" value="{{ value.value | escape }}"
+                  {% if value.active %}checked{% elsif value.count == 0 %}disabled{% endif %}>
+                {% if swatch_image %}
+                  {{ swatch_image | image_url: width: 32 | image_tag: alt: '', width: 16, height: 16, class: 'collection-native-swatch' }}
+                {% elsif value.swatch.color %}
+                  <span class="collection-native-swatch" style="background-color: {{ value.swatch.color | escape }}" aria-hidden="true"></span>
+                {% endif %}
+                <span>{{ value.label | escape }} ({{ value.count }})</span>
+              </label>
+            {% endfor %}
+          {% when 'price_range' %}
+            <div class="collection-native-price">
+              <label>
+                {{ 'collections.native.from' | t }} ({{ cart.currency.iso_code }})
+                <input type="number" name="{{ filter.min_value.param_name | escape }}" min="0" step="any"
+                  max="{{ filter.range_max | divided_by: 100.0 }}"
+                  {% if filter.min_value.value != nil %}value="{{ filter.min_value.value | divided_by: 100.0 }}"{% endif %}>
+              </label>
+              <label>
+                {{ 'collections.native.to' | t }} ({{ cart.currency.iso_code }})
+                <input type="number" name="{{ filter.max_value.param_name | escape }}" min="0" step="any"
+                  max="{{ filter.range_max | divided_by: 100.0 }}"
+                  {% if filter.max_value.value != nil %}value="{{ filter.max_value.value | divided_by: 100.0 }}"{% endif %}>
+              </label>
+            </div>
+        {% endcase %}
+      </fieldset>
+    {% endfor %}
+    <button class="btn btn-border" type="submit">{{ 'collections.native.apply' | t }}</button>
+  </form>
+{%- endif -%}

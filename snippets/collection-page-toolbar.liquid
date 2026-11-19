@@ -10,6 +10,9 @@
 </div>
 {%- endunless -%}
 {% unless settings.toolbarsettings contains 'hidetoolbaroptions' %}
+{% if native_collection %}
+  {% render 'collection-native-toolbar', collection: collection, collection_view: collection_view, pagination_limit: pagination_limit_const %}
+{% else %}
 {% capture qty %}{% if collection.all_products_count > pagination_limit_const and settings.show_perpage %}true{% else %}false{% endif %}{% endcapture %}
 {% if settings.collectionshowsort or qty == "true" %}
 <div class="tt-sort">
@@ -35,6 +38,7 @@
   </select>
   {% endif %}
 </div>
+{% endif %}
 {% endif %}
 {% if settings.collectionshowgrid %}
 <div class="tt-quantity">

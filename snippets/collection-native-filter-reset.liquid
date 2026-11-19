@@ -1,0 +1,9 @@
+{%- liquid
+  assign sort_by = collection.sort_by | default: collection.default_sort_by
+  assign query = sort_by | url_encode | prepend: '?sort_by='
+  if collection_view != blank
+    assign encoded_view = collection_view | url_encode
+    assign query = query | append: '&view=' | append: encoded_view
+  endif
+-%}
+<a href="{{ collection.url | append: query | escape }}">{{ 'collections.sidebar.clear_all' | t }}</a>

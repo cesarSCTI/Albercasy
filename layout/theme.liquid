@@ -566,7 +566,9 @@ body.template-index [class*="parallax"] {
     .tt-product-single-info .tt-price .sale-price { color:#f8353e; margin-right:7px; font-weight:700; }
   </style>
   <!-- Shopify injects (apps, storefront, etc.) -->
-  {% render 'boost-sd-fallback' %}
+  {% unless content_for_layout contains 'data-native-collection' %}
+    {% render 'boost-sd-fallback' %}
+  {% endunless %}
 </body>
 </html>
 {% comment %}

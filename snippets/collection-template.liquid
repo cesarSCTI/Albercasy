@@ -3,7 +3,7 @@
 {%- capture flip_sidebar -%}{% if item_sidebar contains "rightColumn" %} flex-sm-row-reverse{% endif %}{%- endcapture -%}
 {%- assign pagination_limit_const = settings.pagination_limit | times: 1 -%}
 
-<div class="container-indent">
+<div class="container-indent"{% if native_collection %} data-native-collection="{{ section.id | escape }}"{% endif %}>
   <div class="container{% if item_sidebar contains "_wide" %}-fluid-custom container-fluid-custom-mobile-padding{% endif %}">
     <div class="row{{ flip_sidebar }}">
 
@@ -39,10 +39,26 @@
               <span class="tt-icon icon-g-84"></span>
               <h2 class="tt-title">{{ 'collections.general.empty' | t }}</h2>
               <p>{{ 'collections.general.sort_result' | t }}</p>
+              {% if native_collection and collection.filters != empty %}
+                {% render 'collection-native-filter-reset', collection: collection, collection_view: collection_view %}
+              {% endif %}
             </div>
             {%- endif -%}
           </div>
 
+          {% if native_collection %}
+            {% if paginate.pages > 1 %}
+              {% include 'pagination' %}
+              {% if paginate.next %}
+                <div class="text-center">
+                  <a class="btn btn-border" data-collection-more data-end-label="{{ 'collections.toolbar.button_show_more_disabled' | t | escape }}"{% if settings.enable_infinite_scroll == 'autoscroll' %} data-autoscroll{% endif %} href="{{ paginate.next.url | escape }}">{{ 'collections.toolbar.button_show_more' | t }}</a>
+                  <span class="collection-update-status" data-collection-status role="status"
+                    data-success="{{ 'collections.native.loaded' | t | escape }}"
+                    data-error="{{ 'collections.native.load_error' | t | escape }}"></span>
+                </div>
+              {% endif %}
+            {% endif %}
+          {% else %}
           <div class="text-center tt_product_showmore infinitybutton{% if settings.enable_infinite_scroll == 'autoscroll' %} autoscroll_yes{% endif %}{% if paginate.next == empty? and paginate.previous == empty? %} hide{% endif %}">
             
             {%- if paginate.next -%}
@@ -59,6 +75,7 @@
 
           </div>
           
+          {% endif %}
           {%- endpaginate -%}
           
         </div>

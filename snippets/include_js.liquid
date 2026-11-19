@@ -23,7 +23,9 @@
 {%- endif -%}
 {%- endif -%}
 
-{%- if template contains 'collection' -%}
+{%- if content_for_layout contains 'data-native-collection' -%}
+<script src="{{ 'collection-native.js' | asset_url }}" defer="defer"></script>
+{%- elsif template contains 'collection' -%}
 <script src="{{ 'collections-filtres.js' | asset_url }}" defer="defer"></script>
 {%- endif -%}
 

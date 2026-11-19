@@ -1,0 +1,59 @@
+{%- liquid
+  assign sort_by = collection.sort_by | default: collection.default_sort_by
+  assign show_page_size = false
+  if settings.show_perpage
+    if collection.products_count > pagination_limit or collection_view != blank
+      assign show_page_size = true
+    endif
+  endif
+-%}
+{% if settings.collectionshowsort or show_page_size %}
+  <form class="collection-native-toolbar" action="{{ collection.url | escape }}" method="get">
+    {% for filter in collection.filters %}
+      {% for value in filter.active_values %}
+        <input type="hidden" name="{{ value.param_name | escape }}" value="{{ value.value | escape }}">
+      {% endfor %}
+      {% if filter.type == 'price_range' %}
+        {% if filter.min_value.value != nil %}
+          <input type="hidden" name="{{ filter.min_value.param_name | escape }}" value="{{ filter.min_value.value | divided_by: 100.0 }}">
+        {% endif %}
+        {% if filter.max_value.value != nil %}
+          <input type="hidden" name="{{ filter.max_value.param_name | escape }}" value="{{ filter.max_value.value | divided_by: 100.0 }}">
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+
+    {% if settings.collectionshowsort %}
+      <label>
+        {{ 'collections.sorting.title' | t }}
+        <select name="sort_by">
+          {% for option in collection.sort_options %}
+            <option value="{{ option.value | escape }}"{% if sort_by == option.value %} selected{% endif %}>{{ option.name | escape }}</option>
+          {% endfor %}
+        </select>
+      </label>
+    {% else %}
+      <input type="hidden" name="sort_by" value="{{ sort_by | escape }}">
+    {% endif %}
+
+    {% if show_page_size %}
+      <label>
+        {{ 'collections.native.per_page' | t }}
+        <select name="view">
+          <option value="">{{ pagination_limit }}</option>
+          {% assign sizes = '16,32,50' | split: ',' %}
+          {% for size in sizes %}
+            {% assign view = size | prepend: 'por-pagina-' %}
+            {% assign numeric_size = size | plus: 0 %}
+            {% if numeric_size != pagination_limit or collection_view == view %}
+              <option value="{{ view }}"{% if collection_view == view %} selected{% endif %}>{{ size }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </label>
+    {% elsif collection_view != blank %}
+      <input type="hidden" name="view" value="{{ collection_view | escape }}">
+    {% endif %}
+    <button class="btn btn-border" type="submit">{{ 'collections.native.apply' | t }}</button>
+  </form>
+{% endif %}
