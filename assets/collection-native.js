@@ -66,6 +66,30 @@
     sync();
   });
 
+  collection?.querySelectorAll('.collection-native-filters, .collection-native-toolbar').forEach(form => {
+    let priceTimer;
+
+    form.addEventListener('submit', () => clearTimeout(priceTimer));
+    form.addEventListener('change', event => {
+      const control = event.target;
+      if (control.matches('[data-price-min], [data-price-max]')) {
+        clearTimeout(priceTimer);
+        priceTimer = setTimeout(() => form.requestSubmit(), 450);
+      } else if (control.matches('input[type="checkbox"], select, [data-range-min], [data-range-max]')) {
+        clearTimeout(priceTimer);
+        form.requestSubmit();
+      }
+    });
+
+    form.addEventListener('keydown', event => {
+      if (event.key === 'Enter' && event.target.matches('[data-price-min], [data-price-max]')) {
+        event.preventDefault();
+        clearTimeout(priceTimer);
+        form.requestSubmit();
+      }
+    });
+  });
+
   const more = collection?.querySelector('[data-collection-more]');
   if (!more) return;
 

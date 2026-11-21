@@ -101,12 +101,6 @@
   border: 1px solid #ccc;
 }
 
-.collection-native-values {
-  max-height: 17rem;
-  overflow-y: auto;
-  scrollbar-gutter: stable;
-}
-
 .collection-native-value {
   min-height: 1.75rem;
   padding: 0.15rem 0.4rem 0.15rem 0;
@@ -182,21 +176,6 @@
 
 .collection-native-range input:focus-visible,
 .collection-native-range-at-end input[data-range-min] { z-index: 1; }
-
-.collection-native-actions {
-  padding-block: 0.75rem;
-}
-
-.collection-native-actions button { width: 100%; }
-
-@media (max-width: 1024px) {
-  .collection-native-actions {
-    position: sticky;
-    bottom: 0;
-    z-index: 2;
-    background: #fff;
-  }
-}
 
 .collection-native-filter-image {
   width: 2rem;
