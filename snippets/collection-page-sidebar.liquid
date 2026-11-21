@@ -17,7 +17,9 @@
   {%- if settings.show_collectionstab -%}{%- include "collection-sidebar-collections" -%}{%- endif -%}
   
   {% if native_collection %}
-    {% render 'collection-native-filters', collection: collection, collection_view: collection_view %}
+    <div data-collection-facets>
+      {% render 'collection-native-filters', collection: collection, collection_view: collection_view %}
+    </div>
   {% else %}
   {%- capture imagefromshema -%}{%- include 'get_swatch_textures' -%}{%- endcapture -%}
   {%- include "collection-sidebar-filter-shopping" -%}

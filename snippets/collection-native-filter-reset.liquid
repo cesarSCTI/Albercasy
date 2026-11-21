@@ -6,4 +6,4 @@
     assign query = query | append: '&view=' | append: encoded_view
   endif
 -%}
-<a href="{{ collection.url | append: query | escape }}">{{ 'collections.sidebar.clear_all' | t }}</a>
+<a data-collection-remove href="{{ collection.url | append: query | escape }}">{{ 'collections.sidebar.clear_all' | t }}</a>

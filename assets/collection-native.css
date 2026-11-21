@@ -120,7 +120,9 @@
 }
 
 .collection-native-active li a {
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
   padding: 0.25rem 0.55rem;
   border: 1px solid #d9d5c5;
   border-radius: 1rem;
@@ -181,4 +183,34 @@
   width: 2rem;
   max-height: 1.5rem;
   object-fit: contain;
+}
+
+.collection-native-remove-icon {
+  display: grid;
+  place-items: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  border-radius: 50%;
+  background: #f1ede2;
+  color: #222220;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.collection-native-active li a:hover .collection-native-remove-icon,
+.collection-native-active li a:focus-visible .collection-native-remove-icon {
+  background: #222220;
+  color: #fff;
+}
+
+[data-native-collection][aria-busy="true"] .tt-product-listing {
+  opacity: 0.55;
+}
+
+.collection-native-announcement {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
 }

@@ -27,6 +27,10 @@
 
           </div>
 
+          {% if native_collection %}
+            <span class="collection-native-announcement" data-collection-announcement role="status"></span>
+            <span data-collection-total="{{ paginate.items }} {{ 'collections.toolbar.items' | t | escape }}" hidden></span>
+          {% endif %}
           <div class="tt-product-listing row{% if collection.products.size == 0 %} flex-center-message{% endif %}{% if settings.products_in_one_row %} tt-col-one only-row{% endif %}" data-onerow="{{ settings.use_one_row_in_theme }}">
             {%- if collection.products.size > 0 -%}
             {%- for product in collection.products -%}
@@ -47,6 +51,7 @@
           </div>
 
           {% if native_collection %}
+            <div data-collection-pagination>
             {% if paginate.pages > 1 %}
               {% include 'pagination' %}
               {% if paginate.next %}
@@ -58,6 +63,7 @@
                 </div>
               {% endif %}
             {% endif %}
+            </div>
           {% else %}
           <div class="text-center tt_product_showmore infinitybutton{% if settings.enable_infinite_scroll == 'autoscroll' %} autoscroll_yes{% endif %}{% if paginate.next == empty? and paginate.previous == empty? %} hide{% endif %}">
             

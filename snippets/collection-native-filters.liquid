@@ -2,13 +2,13 @@
   {%- capture active_filters -%}
     {%- for filter in collection.filters -%}
       {%- for value in filter.active_values -%}
-        <li><a href="{{ value.url_to_remove | escape }}">{{ 'collections.sidebar.text_remove_parameter' | t }} {{ filter.label | escape }}: {{ value.label | escape }}</a></li>
+        <li><a data-collection-remove href="{{ value.url_to_remove | escape }}" aria-label="{{ 'collections.sidebar.text_remove_parameter' | t | escape }} {{ filter.label | escape }}: {{ value.label | escape }}">{{ filter.label | escape }}: {{ value.label | escape }} <span class="collection-native-remove-icon" aria-hidden="true">&times;</span></a></li>
       {%- endfor -%}
       {%- if filter.type == 'price_range' -%}
         {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
           {%- assign minimum = filter.min_value.value | default: 0 -%}
           {%- assign maximum = filter.max_value.value | default: filter.range_max -%}
-          <li><a href="{{ filter.url_to_remove | escape }}">{{ 'collections.sidebar.text_remove_parameter' | t }} {{ filter.label | escape }}: {{ minimum | money }} – {{ maximum | money }}</a></li>
+          <li><a data-collection-remove href="{{ filter.url_to_remove | escape }}" aria-label="{{ 'collections.sidebar.text_remove_parameter' | t | escape }} {{ filter.label | escape }}: {{ minimum | money }} – {{ maximum | money }}">{{ filter.label | escape }}: {{ minimum | money }} – {{ maximum | money }} <span class="collection-native-remove-icon" aria-hidden="true">&times;</span></a></li>
         {%- endif -%}
       {%- endif -%}
     {%- endfor -%}
@@ -27,7 +27,7 @@
       <input type="hidden" name="view" value="{{ collection_view | escape }}">
     {% endif %}
     {% for filter in collection.filters %}
-      <details class="collection-native-group" open>
+      <details class="collection-native-group" data-filter-key="{{ filter.param_name | escape }}" open>
         <summary>{{ filter.label | escape }}</summary>
         <fieldset aria-label="{{ filter.label | escape }}">
         {% case filter.type %}
