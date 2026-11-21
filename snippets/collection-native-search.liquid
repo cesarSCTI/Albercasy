@@ -1,0 +1,15 @@
+<div class="collection-native-search-box" data-collection-search hidden>
+  <label for="CollectionSearch-{{ section.id | escape }}">{{ 'collections.native.search_collection' | t }}</label>
+  <div class="collection-native-search-field">
+    <input id="CollectionSearch-{{ section.id | escape }}" type="search" data-collection-search-input
+      autocomplete="off" placeholder="{{ 'collections.native.search_collection_hint' | t | escape }}">
+    <button type="button" data-collection-search-clear aria-label="{{ 'collections.native.search_clear' | t | escape }}" hidden>&times;</button>
+  </div>
+  <p role="status" data-collection-search-status
+    data-loading="{{ 'collections.native.search_loading' | t | escape }}"
+    data-empty="{{ 'collections.native.search_empty' | t | escape }}"
+    data-error="{{ 'collections.native.search_error' | t | escape }}"
+    data-count="{{ 'collections.native.search_count' | t: count: 999999 | escape }}"></p>
+  <ul class="collection-native-search-results" data-collection-search-results></ul>
+  <button class="btn btn-border" type="button" data-collection-search-more hidden>{{ 'collections.toolbar.button_show_more' | t }}</button>
+</div>

@@ -1,7 +1,14 @@
-<div class="col-md-4 col-lg-3 col-xl-3 leftColumn{% if item_sidebar == "rightColumn" %} rightColumn{% endif %} aside{% if item_sidebar contains "hidden_closed" %} desctop-no-sidebar{% endif %}">
+<div class="col-md-4 col-lg-3 col-xl-3 leftColumn{% if item_sidebar == "rightColumn" %} rightColumn{% endif %} aside{% if item_sidebar contains "hidden_closed" %} desctop-no-sidebar{% endif %}"{% if native_collection %} id="CollectionFilters-{{ section.id | escape }}" data-collection-drawer{% endif %}>
   <div class="tt-btn-col-close">
-    <a href="#">{{ 'collections.sidebar.back' | t }}</a>
+    <a href="#"{% if native_collection %} data-collection-drawer-close aria-label="{{ 'collections.sidebar.back' | t | escape }}"{% endif %}>
+      {% if native_collection %}
+        <span class="collection-native-drawer-title">{{ 'collections.toolbar.filter' | t }}</span>
+        <span class="collection-native-drawer-x" aria-hidden="true">&times;</span>
+      {% endif %}
+      <span class="collection-native-drawer-back">{{ 'collections.sidebar.back' | t }}</span>
+    </a>
   </div>
+  {% if native_collection %}<div class="collection-native-drawer-body">{% endif %}
   {% unless native_collection %}
   <div class="tt-collapse open tt-filter-detach-option">
     <div class="tt-collapse-content">
@@ -41,4 +48,12 @@
   {% endif %}
   {%- if settings.show_collectionsbanner -%}{%- include "collection-sidebar-banner" -%}{%- endif -%}
   
+  {% if native_collection %}
+    </div>
+    <div class="collection-native-drawer-footer">
+      <button type="button" data-collection-drawer-results>
+        {{ 'collections.native.view_results' | t }} <span data-drawer-total>({{ collection.products_count }})</span>
+      </button>
+    </div>
+  {% endif %}
 </div>

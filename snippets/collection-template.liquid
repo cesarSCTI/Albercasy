@@ -28,8 +28,9 @@
           </div>
 
           {% if native_collection %}
+            {% render 'collection-native-search', section: section %}
             <span class="collection-native-announcement" data-collection-announcement role="status"></span>
-            <span data-collection-total="{{ paginate.items }} {{ 'collections.toolbar.items' | t | escape }}" hidden></span>
+            <span data-result-count="{{ paginate.items }}" data-collection-total="{{ paginate.items }} {{ 'collections.toolbar.items' | t | escape }}" hidden></span>
           {% endif %}
           <div class="tt-product-listing row{% if collection.products.size == 0 %} flex-center-message{% endif %}{% if settings.products_in_one_row %} tt-col-one only-row{% endif %}" data-onerow="{{ settings.use_one_row_in_theme }}">
             {%- if collection.products.size > 0 -%}

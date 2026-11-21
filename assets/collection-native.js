@@ -9,6 +9,71 @@
   let activeRequest;
   let stopLoadMore;
 
+  const drawer = collection.querySelector('[data-collection-drawer]');
+  const drawerToggle = collection.querySelector('[data-collection-drawer-toggle]');
+  const drawerClose = drawer?.querySelector('[data-collection-drawer-close]');
+  const drawerTotal = drawer?.querySelector('[data-drawer-total]');
+  const badge = drawerToggle?.querySelector('[data-filter-badge]');
+
+  function updateDrawerCount(total) {
+    if (!badge) return;
+    const count = collection.querySelectorAll('.collection-native-active li').length;
+    badge.textContent = count;
+    badge.hidden = count === 0;
+    if (total && drawerTotal) drawerTotal.textContent = `(${total})`;
+  }
+
+  if (drawer && drawerToggle && drawerClose) {
+    const mobile = window.matchMedia('(max-width: 1024px)');
+    const title = drawer.querySelector('.collection-native-drawer-title');
+    let wasOpen = false;
+
+    function syncDrawer() {
+      const open = drawer.classList.contains('column-open');
+      const offscreen = mobile.matches || drawer.classList.contains('desctop-no-sidebar');
+      drawer.inert = offscreen && !open;
+      drawerToggle.setAttribute('aria-expanded', String(open));
+
+      if (open) {
+        drawer.setAttribute('role', 'dialog');
+        drawer.setAttribute('aria-modal', 'true');
+        drawer.setAttribute('aria-label', title.textContent.trim());
+        if (!wasOpen) drawerClose.focus({ preventScroll: true });
+      } else {
+        drawer.removeAttribute('role');
+        drawer.removeAttribute('aria-modal');
+        drawer.removeAttribute('aria-label');
+        if (wasOpen && drawerToggle.getClientRects().length) drawerToggle.focus({ preventScroll: true });
+      }
+      wasOpen = open;
+    }
+
+    new MutationObserver(syncDrawer).observe(drawer, { attributes: true, attributeFilter: ['class'] });
+    mobile.addEventListener('change', () => {
+      if (drawer.classList.contains('column-open')) drawerClose.click();
+      syncDrawer();
+    });
+    drawer.querySelector('[data-collection-drawer-results]')?.addEventListener('click', () => drawerClose.click());
+    document.addEventListener('keydown', event => {
+      if (!wasOpen) return;
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        drawerClose.click();
+      } else if (event.key === 'Tab') {
+        const controls = Array.from(drawer.querySelectorAll('a[href], button, input, select, summary'))
+          .filter(control => !control.disabled && control.tabIndex >= 0 && control.getClientRects().length);
+        const boundary = event.shiftKey ? controls[0] : controls.at(-1);
+        if (document.activeElement === boundary || !drawer.contains(document.activeElement)) {
+          event.preventDefault();
+          (event.shiftKey ? controls.at(-1) : controls[0])?.focus();
+        }
+      }
+    });
+    syncDrawer();
+    updateDrawerCount(collection.querySelector('[data-result-count]')?.dataset.resultCount);
+  }
+
+
   async function fetchCollection(url, signal) {
     const sectionUrl = new URL(url);
     sectionUrl.searchParams.set('section_id', collection.dataset.nativeCollection);
@@ -44,6 +109,8 @@
       if (!nextGrid) throw new Error('Missing product grid');
 
       const focused = document.activeElement;
+      const drawerBody = drawer?.querySelector('.collection-native-drawer-body');
+      const drawerScroll = drawerBody?.scrollTop;
       const groups = new Map(Array.from(collection.querySelectorAll('[data-filter-key]'), group => [
         group.dataset.filterKey,
         { open: group.open, query: group.querySelector('[data-filter-search]')?.value },
@@ -67,6 +134,7 @@
         if (search && previous.query) search.value = previous.query;
       });
 
+      if (drawerBody) drawerBody.scrollTop = drawerScroll;
       initializeControls();
       stopLoadMore = initializeLoadMore();
 
@@ -83,14 +151,17 @@
           );
         }
         (replacement || group?.querySelector('summary') || collection.querySelector('[data-collection-facets] summary') ||
-          collection.querySelector('.tt-btn-toggle a'))?.focus({ preventScroll: true });
+          (drawer?.classList.contains('column-open') ? drawerClose : drawerToggle))?.focus({ preventScroll: true });
       }
 
       if (pushHistory && url.href !== window.location.href) {
         history.pushState(history.state, '', url);
       }
       const total = next.querySelector('[data-collection-total]');
-      if (total) announcement.textContent = total.dataset.collectionTotal;
+      if (total) {
+        announcement.textContent = total.dataset.collectionTotal;
+        updateDrawerCount(total.dataset.resultCount);
+      }
     } catch {
       if (!request.signal.aborted) {
         if (pushHistory) window.location.assign(url);
@@ -105,13 +176,143 @@
     }
 
     refreshProducts();
+    refreshCollectionSearch?.();
+  }
+
+
+  function normalizeLabel(value) {
+    return value.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().trim();
+  }
+
+  function initializeCollectionSearch() {
+    const search = collection.querySelector('[data-collection-search]');
+    if (!search) return;
+
+    const input = search.querySelector('[data-collection-search-input]');
+    const clear = search.querySelector('[data-collection-search-clear]');
+    const status = search.querySelector('[data-collection-search-status]');
+    const results = search.querySelector('[data-collection-search-results]');
+    const more = search.querySelector('[data-collection-search-more]');
+    const formatter = new Intl.NumberFormat(document.documentElement.lang || undefined);
+    const pageSize = 24;
+    let index;
+    let matches = [];
+    let revision = 0;
+    let timer;
+
+    function getIndex() {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('page');
+      url.searchParams.delete('section_id');
+      url.searchParams.set('view', 'catalog-search');
+      if (index?.key === url.href) return index.promise;
+
+      index?.controller.abort();
+      const controller = new AbortController();
+      const pending = { key: url.href, controller };
+      index = pending;
+      pending.promise = (async () => {
+        const products = [];
+        const visited = new Set();
+        while (!visited.has(url.href)) {
+          visited.add(url.href);
+          const response = await fetch(url, { signal: controller.signal });
+          if (!response.ok) throw new Error('Collection search unavailable');
+          const page = await response.json();
+          for (const product of page.products) {
+            product.searchText = normalizeLabel([product.title, product.vendor, product.type].join(' '));
+            products.push(product);
+          }
+          if (!page.next) break;
+          const nextPage = new URL(page.next, url).searchParams.get('page');
+          if (!nextPage) break;
+          url.searchParams.set('page', nextPage);
+        }
+        return products;
+      })().catch(error => {
+        if (index === pending) index = undefined;
+        throw error;
+      });
+      return pending.promise;
+    }
+
+    function showMore() {
+      const start = results.children.length;
+      for (const product of matches.slice(start, start + pageSize)) {
+        const item = document.createElement('li');
+        const link = document.createElement('a');
+        const title = document.createElement('span');
+        link.href = product.url;
+        title.textContent = product.title;
+        if (product.image) {
+          const image = document.createElement('img');
+          image.src = product.image;
+          image.alt = '';
+          image.loading = 'lazy';
+          link.append(image);
+        }
+        link.append(title);
+        item.append(link);
+        results.append(item);
+      }
+      more.hidden = results.children.length >= matches.length;
+      if (start > 0) results.children[start]?.querySelector('a')?.focus();
+    }
+
+    async function updateSearch() {
+      clearTimeout(timer);
+      const current = ++revision;
+      const query = normalizeLabel(input.value);
+      clear.hidden = !input.value;
+      const pagination = collection.querySelector('[data-collection-pagination]');
+      grid.hidden = Boolean(query);
+      if (pagination) pagination.hidden = Boolean(query);
+      more.hidden = true;
+      results.replaceChildren();
+
+      if (!query) {
+        status.textContent = '';
+        return;
+      }
+
+      status.textContent = status.dataset.loading;
+      try {
+        const products = await getIndex();
+        if (current !== revision) return;
+        const words = query.split(/\s+/);
+        matches = products.filter(product => words.every(word => product.searchText.includes(word)));
+        status.textContent = matches.length
+          ? status.dataset.count.replace('999999', formatter.format(matches.length))
+          : status.dataset.empty;
+        showMore();
+      } catch {
+        if (current !== revision) return;
+        status.textContent = status.dataset.error;
+        grid.hidden = false;
+        if (pagination) pagination.hidden = false;
+      }
+    }
+
+    input.addEventListener('input', () => {
+      revision++;
+      clearTimeout(timer);
+      if (!input.value.trim()) updateSearch();
+      else timer = setTimeout(updateSearch, 250);
+    });
+    input.addEventListener('keydown', event => {
+      if (event.key === 'Enter') updateSearch();
+    });
+    clear.addEventListener('click', () => {
+      input.value = '';
+      updateSearch();
+      input.focus();
+    });
+    more.addEventListener('click', showMore);
+    search.hidden = false;
+    return updateSearch;
   }
 
   function initializeControls() {
-    function normalizeLabel(value) {
-      return value.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().trim();
-    }
-
     collection?.querySelectorAll('[data-filter-search]').forEach(search => {
       const group = search.closest('.collection-native-group');
       const options = Array.from(group.querySelectorAll('[data-filter-value]'), element => ({
@@ -221,7 +422,7 @@
     const loadController = new AbortController();
 
     async function loadMore() {
-      if (activeRequest || loading || !more.hasAttribute('href')) return;
+      if (grid.hidden || activeRequest || loading || !more.hasAttribute('href')) return;
 
       loading = true;
       observer?.unobserve(more);
@@ -281,6 +482,7 @@
     };
   }
 
+  const refreshCollectionSearch = initializeCollectionSearch();
   initializeControls();
   stopLoadMore = initializeLoadMore();
   let currentView = new URL(window.location.href).searchParams.get('view');

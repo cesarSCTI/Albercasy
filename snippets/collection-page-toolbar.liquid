@@ -6,7 +6,10 @@
 
 {%- unless item_sidebar contains "_disable_" -%}
 <div class="tt-btn-toggle">
-  <a href="#">{{ 'collections.toolbar.filter' | t }}</a>
+  <a href="#"{% if native_collection %} data-collection-drawer-toggle aria-controls="CollectionFilters-{{ section.id | escape }}" aria-expanded="false" aria-haspopup="dialog"{% endif %}>
+    {{ 'collections.toolbar.filter' | t }}
+    {% if native_collection %}<span class="collection-native-filter-badge" data-filter-badge hidden></span>{% endif %}
+  </a>
 </div>
 {%- endunless -%}
 {% unless settings.toolbarsettings contains 'hidetoolbaroptions' %}
