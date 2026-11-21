@@ -27,8 +27,14 @@
       <input type="hidden" name="view" value="{{ collection_view | escape }}">
     {% endif %}
     {% for filter in collection.filters %}
+      {% assign category_style = false %}
+      {% if filter.param_name == 'filter.p.t.category' or filter.param_name == 'filter.p.m.custom.familia_comercial' %}
+        {% assign category_style = true %}
+      {% endif %}
       <details class="collection-native-group" data-filter-key="{{ filter.param_name | escape }}" open>
-        <summary>{{ filter.label | escape }}</summary>
+        <summary>
+          {{ filter.label | escape }}{% if filter.type == 'price_range' %} ({{ cart.currency.symbol | escape }}){% endif %}
+        </summary>
         <fieldset aria-label="{{ filter.label | escape }}">
         {% case filter.type %}
           {% when 'boolean', 'list' %}
@@ -41,7 +47,7 @@
             <div class="collection-native-values">
             {% for value in filter.values %}
               {% assign swatch_image = value.swatch.image | default: value.image %}
-              <label class="collection-native-value" data-filter-value="{{ value.label | escape }}">
+              <label class="collection-native-value{% if category_style %} collection-native-value--category{% endif %}" data-filter-value="{{ value.label | escape }}">
                 <input type="checkbox" name="{{ value.param_name | escape }}" value="{{ value.value | escape }}"
                   {% if value.active %}checked{% elsif value.count == 0 %}disabled{% endif %}>
                 {% if value.image and filter.presentation == 'image' %}
@@ -51,7 +57,7 @@
                 {% elsif value.swatch.color %}
                   <span class="collection-native-swatch" style="background-color: {{ value.swatch.color | escape }}" aria-hidden="true"></span>
                 {% endif %}
-                <span>{{ value.label | escape }}</span>
+                <span class="collection-native-value-label">{{ value.label | escape }}</span>
                 <span class="collection-native-count">({{ value.count }})</span>
               </label>
             {% endfor %}
@@ -62,14 +68,17 @@
               data-price-error="{{ 'collections.native.price_order' | t | escape }}">
             <div class="collection-native-price">
               <label>
-                {{ 'collections.native.from' | t }} ({{ cart.currency.iso_code }})
-                <input type="number" data-price-min name="{{ filter.min_value.param_name | escape }}" min="0" step="any"
+                <span aria-hidden="true">{{ cart.currency.symbol | escape }}</span>
+                <input type="number" data-price-min placeholder="0"
+                  aria-label="{{ 'collections.native.from' | t | escape }} ({{ cart.currency.iso_code | escape }})" name="{{ filter.min_value.param_name | escape }}" min="0" step="any"
                   max="{{ range_max }}"
                   {% if filter.min_value.value != nil %}value="{{ filter.min_value.value | divided_by: 100.0 }}"{% endif %}>
               </label>
+              <span class="collection-native-price-divider" aria-hidden="true">&ndash;</span>
               <label>
-                {{ 'collections.native.to' | t }} ({{ cart.currency.iso_code }})
-                <input type="number" data-price-max name="{{ filter.max_value.param_name | escape }}" min="0" step="any"
+                <span aria-hidden="true">{{ cart.currency.symbol | escape }}</span>
+                <input type="number" data-price-max placeholder="{{ range_max }}"
+                  aria-label="{{ 'collections.native.to' | t | escape }} ({{ cart.currency.iso_code | escape }})" name="{{ filter.max_value.param_name | escape }}" min="0" step="any"
                   max="{{ range_max }}"
                   {% if filter.max_value.value != nil %}value="{{ filter.max_value.value | divided_by: 100.0 }}"{% endif %}>
               </label>
@@ -81,6 +90,12 @@
                   aria-label="{{ filter.label | escape }} — {{ 'collections.native.from' | t | escape }}">
                 <input type="range" data-range-max min="0" max="{{ range_max }}" step="any"
                   aria-label="{{ filter.label | escape }} — {{ 'collections.native.to' | t | escape }}">
+                <div class="collection-native-range-marks" aria-hidden="true">
+                  {% for index in (0..4) %}
+                    {% assign mark = range_max | times: index | divided_by: 4.0 %}
+                    <span>{% if forloop.last %}{{ mark | round: 2 }}{% else %}{{ mark | round }}{% endif %}</span>
+                  {% endfor %}
+                </div>
               </div>
             {% endif %}
             </div>
