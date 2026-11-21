@@ -1,8 +1,8 @@
 <div class="collection-native-search-box" data-collection-search hidden>
-  <label for="CollectionSearch-{{ section.id | escape }}">{{ 'collections.native.search_collection' | t }}</label>
   <div class="collection-native-search-field">
     <input id="CollectionSearch-{{ section.id | escape }}" type="search" data-collection-search-input
-      autocomplete="off" placeholder="{{ 'collections.native.search_collection_hint' | t | escape }}">
+      autocomplete="off" aria-label="{{ 'collections.native.search_collection' | t | escape }}"
+      placeholder="{{ 'collections.native.search_collection_hint' | t | escape }}">
     <button type="button" data-collection-search-clear aria-label="{{ 'collections.native.search_clear' | t | escape }}" hidden>&times;</button>
   </div>
   <p role="status" data-collection-search-status

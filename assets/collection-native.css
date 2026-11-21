@@ -84,10 +84,7 @@
 .collection-native-group[open] summary::before { transform: rotate(90deg); }
 
 .collection-native-search {
-  width: 100%;
   margin: 0 0 0.5rem;
-  padding: 0.45rem 0.65rem;
-  border: 1px solid #ccc;
 }
 
 .collection-native-value[hidden] { display: none; }
@@ -612,27 +609,25 @@ body.no-scroll:has([data-native-collection] .aside.column-open) > .modal-filter 
   font-family: var(--collection-filter-font);
 }
 
-.collection-native-search-box label {
-  display: block;
-  margin-bottom: 0.3rem;
-  font-size: 0.875rem;
-  font-weight: 700;
-}
-
 .collection-native-search-field {
   position: relative;
-  max-width: 34rem;
+  width: 100%;
 }
 
-.collection-native-search-field input {
+.collection-native-search-field input,
+.collection-native-search {
   width: 100%;
   min-height: 44px;
-  padding: 0.55rem 3rem 0.55rem 0.75rem;
-  border: 1px solid #92999e;
-  border-radius: 4px;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid var(--collection-line);
+  border-radius: 10px;
   background: #fff;
   color: inherit;
   font: inherit;
+}
+
+.collection-native-search-field input {
+  padding-inline-end: 3rem;
 }
 
 .collection-native-search-field input::-webkit-search-cancel-button { appearance: none; }
@@ -648,7 +643,8 @@ body.no-scroll:has([data-native-collection] .aside.column-open) > .modal-filter 
   cursor: pointer;
 }
 
-.collection-native-search-field :focus-visible {
+.collection-native-search-field :focus-visible,
+.collection-native-search:focus-visible {
   outline: 2px solid var(--collection-accent);
   outline-offset: 2px;
 }
