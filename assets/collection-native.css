@@ -5,7 +5,6 @@
   gap: 0.75rem;
 }
 
-.collection-native-toolbar select,
 .collection-native-price input {
   display: block;
   max-width: 100%;
@@ -217,12 +216,8 @@
 }
 
 .collection-native-toolbar select {
-  min-height: 2.75rem;
-  border: 1px solid #92999e;
-  border-radius: 2px;
-  background: #fff;
-  color: inherit;
-  font: inherit;
+  display: block;
+  max-width: 100%;
 }
 
 .collection-native-toolbar select[name="sort_by"] {
@@ -499,12 +494,35 @@ body.no-scroll:has([data-native-collection] .aside.column-open) > .modal-filter 
   [data-native-collection] .tt-btn-toggle a {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
+    top: 0;
+    gap: 0.5rem;
     min-height: 44px;
-    padding-inline: 0.7rem;
-    border: 1px solid var(--collection-line);
-    border-radius: 4px;
+    padding-inline: 0.9rem;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: var(--collection-accent);
     color: var(--collection-ink);
+    font-size: 0.875rem;
+    font-weight: 750;
+  }
+
+  [data-native-collection] .tt-btn-toggle a::before {
+    content: '';
+    top: 0;
+    width: 1rem;
+    height: 1rem;
+    margin: 0;
+    background: currentColor;
+    clip-path: polygon(0 10%, 100% 10%, 62% 54%, 62% 82%, 38% 96%, 38% 54%);
+  }
+
+  [data-native-collection] .tt-btn-toggle a:focus-visible {
+    outline: 2px solid var(--collection-ink);
+    outline-offset: 2px;
+  }
+
+  [data-native-collection] .tt-btn-toggle .collection-native-filter-badge:not([hidden]) {
+    background: #fff;
   }
 
   [data-native-collection] .aside.leftColumn.column-open {
@@ -615,8 +633,11 @@ body.no-scroll:has([data-native-collection] .aside.column-open) > .modal-filter 
 }
 
 .collection-native-search-field input,
-.collection-native-search {
-  width: 100%;
+.collection-native-search { width: 100%; }
+
+.collection-native-search-field input,
+.collection-native-search,
+.collection-native-toolbar select {
   min-height: 44px;
   padding: 0.55rem 0.8rem;
   border: 1px solid var(--collection-line);
